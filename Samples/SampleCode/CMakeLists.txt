@@ -10,6 +10,10 @@ SET(INCLUDE_DESTINATION "include/${PROJECT_NAME}")
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX:         " ${CMAKE_INSTALL_PREFIX} )
 MESSAGE( STATUS "LIB_DESTINATION:         " ${LIB_DESTINATION} )
 
+# Include the source directory to make sure that out-of-source
+# builds can find the proper headers.
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+
 # Find U3D
 FIND_LIBRARY(U3D_LIB NAMES IDTF)
 MESSAGE(STATUS "Found U3D library at: ${U3D_LIB}")
