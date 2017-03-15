@@ -192,6 +192,8 @@ int main(int argc, char* argv[])
 		IFXDEBUG_STARTUP();
 		result = IFXCOMInitialize();
 	}
+	
+	IFXTRACE_GENERIC(L"[Converter] IFXCOMInitialize %i\n", result);
 
 	if( IFXSUCCESS(result) )
 	{
@@ -220,16 +222,19 @@ int main(int argc, char* argv[])
 		{
 			SceneUtilities sceneUtils;
 			FileParser fileParser;
-
+            
+            IFXTRACE_GENERIC( L"[Converter] fileParser.Initialize\n" );
 			result = fileParser.Initialize( fileOptions.inFile.Raw() );
 
 			if( IFXSUCCESS(result) )
+                IFXTRACE_GENERIC( L"[Converter] sceneUtils.InitializeScene\n" );
 				result = sceneUtils.InitializeScene( 
 											fileOptions.profile, 
 											fileOptions.scalingFactor );
 
 			if( IFXSUCCESS(result) )
 			{
+                IFXTRACE_GENERIC( L"[Converter] converter.Convert\n" );
 				SceneConverter converter( 
 									&fileParser, &sceneUtils, 
 									&converterOptions );
