@@ -122,15 +122,18 @@ using namespace U3D_IDTF;
 int main()
 {		
 	IFXRESULT result = IFX_OK;
+	IFXTRACE_GENERIC(L"[Generator] IFX_OK == %i\n", result);
 
 	result = IFXSetDefaultLocale();
-	IFXTRACE_GENERIC(L"[Converter] IFXSetDefaultLocale %i\n", result);
+	IFXTRACE_GENERIC(L"[Generator] IFXSetDefaultLocale %i\n", result);
 
 	if( IFXSUCCESS(result) )
 	{
 		IFXDEBUG_STARTUP();
 		result = IFXCOMInitialize();
 	}
+	
+	IFXTRACE_GENERIC(L"[Generator] IFXCOMInitialize %i\n", result);
 
 	{
 	ConverterOptions converterOptions;
@@ -163,6 +166,8 @@ int main()
 
 	if( IFXSUCCESS(result) )
 		result = sceneUtils.InitializeScene( fileOptions.profile, fileOptions.scalingFactor );
+    
+    IFXTRACE_GENERIC(L"[Converter] sceneUtils.InitializeScene %i\n", result);
 
 
 	SceneConverter converter( &sceneUtils, &converterOptions );

@@ -199,6 +199,7 @@ I32 IFXAPI IFXDebugTraceCustom( const U32        component,
 			wcscat( pMessage, pComponentString );
 		wcscat( pMessage, L" " );
 		swprintf( gs_pDebugMessage, _MESSAGE_LENGTH_MAX, pMessage );
+		fprintf(stdout, "%s\n", gs_pDebugMessage);
 		IFXOSOutputDebugString( gs_pDebugMessage );
 
 		va_list args;
@@ -208,6 +209,7 @@ I32 IFXAPI IFXDebugTraceCustom( const U32        component,
 			args );
 		va_end( args );
 
+		fprintf(stdout, "%s\n", gs_pDebugMessage);
 		IFXOSOutputDebugString( gs_pDebugMessage );
 	}
 #endif
@@ -240,6 +242,7 @@ I32 IFXAPI IFXDebugTraceGeneric( const IFXCHAR* pFormatString, ... )
 			wcscat( pMessage, pComponentString );
 		wcscat( pMessage, L" " );
 		swprintf( gs_pDebugMessage, _MESSAGE_LENGTH_MAX, pMessage );
+		fprintf(stdout, "%s\n", gs_pDebugMessage);
 		IFXOSOutputDebugString( gs_pDebugMessage );
 
 		va_list args;
@@ -248,6 +251,7 @@ I32 IFXAPI IFXDebugTraceGeneric( const IFXCHAR* pFormatString, ... )
 			pFormatString, args );
 		va_end( args );
 
+		fprintf(stdout, "%s\n", gs_pDebugMessage);
 		IFXOSOutputDebugString( gs_pDebugMessage );
 	}
 #endif

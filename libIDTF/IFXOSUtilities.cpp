@@ -448,12 +448,12 @@ IFXRESULT IFXAPI_CALLTYPE IFXSetDefaultLocale( void )
   IFXRESULT result = IFX_OK;
   char*     loc    = NULL;
 
-  loc = setlocale(LC_CTYPE, "English");
+  //loc = setlocale(LC_CTYPE, "English");
 
-  if (NULL == loc)
-  {
-    result = IFX_E_UNDEFINED;
-  }
+  //if (NULL == loc)
+  //{
+  //  result = IFX_E_UNDEFINED;
+  //}
 
   return result;
 }
@@ -791,13 +791,13 @@ IFXRESULT IFXAPI_CALLTYPE IFXSetDefaultLocale( void )
 {
   IFXRESULT result = IFX_OK;
   char*     loc    = NULL;
+  
+  //loc = setlocale(LC_CTYPE, "en_US.UTF-8");
 
-  loc = setlocale(LC_CTYPE, "en_US.UTF-8");
-
-  if (NULL == loc)
-  {
-    result = IFX_E_UNDEFINED;
-  }
+  //if (NULL == loc)
+  //{
+  //  result = IFX_E_UNDEFINED;
+  //}
 
   return result;
 }

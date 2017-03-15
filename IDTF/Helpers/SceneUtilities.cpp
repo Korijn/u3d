@@ -115,6 +115,7 @@ SceneUtilities::~SceneUtilities()
 IFXRESULT SceneUtilities::InitializeScene( U32 profile, F64 scaleFactor )
 {
 	IFXRESULT result = IFX_OK;
+	IFXTRACE_GENERIC( L"InitializeScene\n" );
 
 	if( m_bInit )
 	{
@@ -127,14 +128,17 @@ IFXRESULT SceneUtilities::InitializeScene( U32 profile, F64 scaleFactor )
 	{
 		result = IFXCreateComponent( CID_IFXCoreServices, IID_IFXCoreServices,
 			(void**)&m_pCoreServicesMain );
+        IFXTRACE_GENERIC( L"IFXCreateComponent m_pCoreServicesMain: %d\n", result );
 	}
 
 	if( IFXSUCCESS( result ) )
 	{
 		result = m_pCoreServicesMain->Initialize( profile, scaleFactor );
+		IFXTRACE_GENERIC( L"m_pCoreServicesMain->Initialize: %d\n", result );
 		if(IFXSUCCESS(result)) {
 			IFXRELEASE(m_pCoreServices);
 			result = m_pCoreServicesMain->GetWeakInterface(&m_pCoreServices);
+			IFXTRACE_GENERIC( L"m_pCoreServicesMain->GetWeakInterface: %d\n", result );
 		}
 	}
 
@@ -175,9 +179,12 @@ IFXRESULT SceneUtilities::GetSceneMetaData( IFXMetaDataX** ppMetaData )
 {
 	IFXRESULT result = IFX_OK;
 	IFXMetaDataX* pMetaData = NULL;
+	
+	IFXTRACE_GENERIC( L"GetSceneMetaData\n" );
 
 	if( !m_bInit || !ppMetaData || !m_pCoreServices )
 	{
+        IFXTRACE_GENERIC( L"m_bInit: %d - ppMetaData: %d - m_pCoreServices: %d:\n", m_bInit, ppMetaData, m_pCoreServices );
 		result = IFX_E_NOT_INITIALIZED;
 		IFXASSERT(0);
 	}
