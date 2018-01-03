@@ -1043,11 +1043,11 @@ void vtkU3DExporter::WriteData()
                                         {
                                             vtkIdType curColor = uucolors->GetNumberOfTuples();
                                             unsigned char color[4];
-                                            colors->GetTupleValue(pid, color);
+                                            colors->GetTypedTuple(pid, color);
                                             for (vtkIdType cid=0; cid < uucolors->GetNumberOfTuples(); cid++)
                                             {
                                                 unsigned char uucolor[4];
-                                                uucolors->GetTupleValue(cid, uucolor);
+                                                uucolors->GetTypedTuple(cid, uucolor);
                                                 if (color[0] == uucolor[0] && color[1] == uucolor[1] && color[2] == uucolor[2] && color[3] == uucolor[3])
                                                 {
                                                     curColor = cid;
@@ -1055,7 +1055,7 @@ void vtkU3DExporter::WriteData()
                                                 }
                                             }
                                             if (curColor == uucolors->GetNumberOfTuples())
-                                                curColor = uucolors->InsertNextTupleValue(color);
+                                                curColor = uucolors->InsertNextTypedTuple(color);
                                             ucolorIds->InsertNextId(curColor);
                                         }
                                         numColors = uucolors->GetNumberOfTuples();
@@ -1064,9 +1064,9 @@ void vtkU3DExporter::WriteData()
                                         for (vtkIdType cid=0; cid < uucolors->GetNumberOfTuples(); cid++)
                                         {
                                             unsigned char uucolor[4];
-                                            uucolors->GetTupleValue(cid, uucolor);
+                                            uucolors->GetTypedTuple(cid, uucolor);
                                             const double ucolor[4] = { uucolor[0]/255.0, uucolor[1]/255.0, uucolor[2]/255.0, uucolor[3]/255.0 };
-                                            ucolors->InsertNextTupleValue(ucolor);
+                                            ucolors->InsertNextTypedTuple(ucolor);
                                         }
                                     }
 
@@ -1162,7 +1162,7 @@ void vtkU3DExporter::WriteData()
                                         for (vtkIdType pid=0; pid < numColors; pid++)
                                         {
                                             double color[4];
-                                            ucolors->GetTupleValue(pid, color);
+                                            ucolors->GetTypedTuple(pid, color);
                                             double intens;
                                             wchar_t materialName[256];
                                             swprintf(materialName, 255, L"Material%u", pMaterialResources->GetResourceCount());
@@ -1240,7 +1240,7 @@ void vtkU3DExporter::WriteData()
                                         {
                                             vtkIdType CurColor;
                                             unsigned char color[4];
-                                            colors->GetTupleValue(pid, color);
+                                            colors->GetTypedTuple(pid, color);
                                             double dcolor[3];
                                             dcolor[0] = color[0]/255.0;
                                             dcolor[1] = color[1]/255.0;
@@ -1471,15 +1471,15 @@ if (colors)                                          \
 if (cell_colors)                                     \
 {                                                    \
 unsigned char color[4];                              \
-colors->GetTupleValue(cellOffset, color);            \
+colors->GetTypedTuple(cellOffset, color);            \
 AddLine(LineSet, point1, point2, color, NULL);       \
 }                                                    \
 else                                                 \
 {                                                    \
 unsigned char color1[4];                             \
-colors->GetTupleValue(indx[id1], color1);            \
+colors->GetTypedTuple(indx[id1], color1);            \
 unsigned char color2[4];                             \
-colors->GetTupleValue(indx[id2], color2);            \
+colors->GetTypedTuple(indx[id2], color2);            \
 AddLine(LineSet, point1, point2, color1, color2);    \
 }                                                    \
 }                                                    \
