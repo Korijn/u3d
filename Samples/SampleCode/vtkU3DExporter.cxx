@@ -31,6 +31,9 @@
 #include "vtkTexture.h"
 #include "vtkTransform.h"
 #include "vtkTriangleFilter.h"
+#include "vtkInformation.h"
+#include "vtkInformationStringKey.h"
+#include "vtkInformationIterator.h"
 
 #include <sstream>
 #include <cassert>
@@ -835,6 +838,23 @@ void vtkU3DExporter::WriteData()
 
                                 wchar_t name[256];
                                 swprintf(name, 255, L"Mesh%u", Nodes.GetNodeCount());
+
+                                vtkInformation* information = aPart->GetPropertyKeys();
+                                if (information != NULL)
+                                {
+                                    VTK_CREATE(vtkInformationIterator, iter);
+                                    iter->SetInformation(information);
+                                    for (iter->InitTraversal(); !iter->IsDoneWithTraversal(); iter->GoToNextItem())
+                                    {
+                                        vtkInformationStringKey* key = vtkInformationStringKey::SafeDownCast(iter->GetCurrentKey());
+                                        if (strcmp(key->GetName(), "MeshName") == 0)
+                                        {
+                                            swprintf(name, 255, L"%s", information->Get(key));
+                                            vtkDebugMacro(<<"Found MeshName in actor: " << information->Get(key));
+                                            break;
+                                        }
+                                    }
+                                }
 
                                 // Create Node
                                 ModelNode Model;
