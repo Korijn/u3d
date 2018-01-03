@@ -46,6 +46,10 @@ public:
     vtkBooleanMacro(MeshCompression, int);
     vtkGetMacro(MeshCompression, int);
 
+    void PrintSelf(ostream & os, vtkIndent indent){}
+    void PrintHeader(ostream & os, vtkIndent indent){}
+    void PrintTrailer(ostream & os, vtkIndent indent){}
+
 protected:
     vtkU3DExporter();
     ~vtkU3DExporter();
