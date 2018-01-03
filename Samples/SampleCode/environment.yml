@@ -5,7 +5,7 @@ channels:
   - defaults
 dependencies:
   - vtk =7.1.0
-  - u3d =0.3.3
+  - u3d =0.3.*
   - python =3.6.*
   - cmake
   - ninja
