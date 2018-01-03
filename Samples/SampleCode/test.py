@@ -66,7 +66,7 @@ def get_name_for_actor(actor, keyName="MeshName"):
     return None
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Create cube
     cube = vtk.vtkCubeSource()
 
@@ -79,10 +79,10 @@ if __name__ == '__main__':
     cubeActor.SetMapper(cubeMapper)
     assert get_name_for_actor(cubeActor) is None
 
-    stlPath = os.path.join(os.path.dirname(__file__), 'test.stl')
+    stlPath = os.path.join(os.path.dirname(__file__), "test.stl")
     stlActor = create_actor_from_stl(stlPath)
-    set_name_for_actor("TestName", stlActor)
-    assert get_name_for_actor(stlActor) == "TestName"
+    set_name_for_actor("a9p", stlActor)
+    assert get_name_for_actor(stlActor) == "a9p"
 
     # Get the file_path and delete if it already exists
     dir_path = tempfile.gettempdir()
@@ -102,7 +102,7 @@ if __name__ == '__main__':
     if not os.path.exists("{}.u3d".format(file_path)):
         raise Exception("Failed to create the U3D file")
 
-    print("Test that the name of the actor is in the logs...")
-    assert 'TestName' in open("{}.u3d.DebugInfo.txt".format(file_path)).read()
+    print("Testing that the name of the actor is in the logs...")
+    assert " a9p\n" in open("{}.u3d.DebugInfo.txt".format(file_path)).read()
 
     print("Test successful")

@@ -849,6 +849,7 @@ void vtkU3DExporter::WriteData()
                                         vtkInformationStringKey* key = vtkInformationStringKey::SafeDownCast(iter->GetCurrentKey());
                                         if (strcmp(key->GetName(), "MeshName") == 0)
                                         {
+                                            // NOTE: swprintf puts in a terminating null character, so we don't have to clear the buffer
                                             swprintf(name, 255, L"%s", information->Get(key));
                                             vtkDebugMacro(<<"Found MeshName in actor: " << information->Get(key));
                                             break;
