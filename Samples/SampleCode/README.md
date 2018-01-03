@@ -6,7 +6,7 @@ Build and test instructions:
     conda activate vtku3dexporter
     mkdir build
     cd build
-    ccmake ..
+    cmake ..
     make
     PYTHONPATH=$(pwd) python ../test.py
 
