@@ -104,6 +104,7 @@ if(WRAP_PYTHON)
     # link 'em up
     TARGET_LINK_LIBRARIES("${PROJECT_NAME}Python"
         "${PROJECT_NAME}PythonD"
+        ${PYTHON_LIBRARIES}
         ${VTK_PYTHOND_LIBS})
     # prettify the output
     SET_TARGET_PROPERTIES("${PROJECT_NAME}Python" PROPERTIES PREFIX "")
