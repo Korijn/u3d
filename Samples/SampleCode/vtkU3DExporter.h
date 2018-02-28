@@ -46,9 +46,9 @@ public:
     vtkBooleanMacro(MeshCompression, int);
     vtkGetMacro(MeshCompression, int);
 
-    void PrintSelf(ostream & os, vtkIndent indent){}
-    void PrintHeader(ostream & os, vtkIndent indent){}
-    void PrintTrailer(ostream & os, vtkIndent indent){}
+    void PrintSelf(ostream & os, vtkIndent indent) override {}
+    void PrintHeader(ostream & os, vtkIndent indent) override {}
+    void PrintTrailer(ostream & os, vtkIndent indent) override {}
 
 protected:
     vtkU3DExporter();
@@ -56,7 +56,7 @@ protected:
 
     // Description:
     // Write data to output.
-    void WriteData();
+    void WriteData() override;
 
     char *FileName;
     int MeshCompression;
