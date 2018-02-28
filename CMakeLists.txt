@@ -1,5 +1,5 @@
 project(U3D)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 if(NOT DEFINED U3D_SHARED)
     option(U3D_SHARED "Use system libraries for jpeg, png and z instead of bundled" ON)
@@ -686,9 +686,9 @@ install(
 	LIBRARY DESTINATION ${LIB_DESTINATION}
 )
 
-# Something Windows-only 
+# Something Windows-only
 # INCLUDE_DIRECTORIES( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include )
-# 
+#
 # SET( IFXImportingStatic_SRCS
 # 	RTL/Component/Base/IFXCoincidentVertexMap.cpp
 # 	RTL/Component/Base/IFXCornerIter.cpp
@@ -885,7 +885,7 @@ SET( IFXCore_SRCS
 	RTL/Component/UVGenerator/CIFXUVMapperReflection.cpp
 	RTL/Component/UVGenerator/CIFXUVMapperSpherical.cpp
 	RTL/Kernel/Common/CIFXConnector.cpp
-	RTL/Kernel/Common/CIFXPerformanceTimer.cpp 
+	RTL/Kernel/Common/CIFXPerformanceTimer.cpp
 	RTL/Kernel/Common/IFXCheckX.cpp
 	RTL/Kernel/IFXCom/CIFXComponentManager.cpp
 	RTL/Kernel/IFXCom/CIFXGUIDHashMap.cpp
@@ -1660,7 +1660,7 @@ ENDIF(UNIX AND NOT APPLE)
 target_link_libraries( IDTFConverter  IFXCoreStatic ${CMAKE_DL_LIBS} )
 add_dependencies( IDTFConverter  IFXCoreStatic )
 install(
-	TARGETS IDTFConverter 
+	TARGETS IDTFConverter
 	DESTINATION ${BIN_DESTINATION}
 )
 
@@ -1669,7 +1669,7 @@ INCLUDE_DIRECTORIES( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Inclu
 	RTL/Component/Base
 	IDTF
 	IDTF/Include
-	IDTF/Common 
+	IDTF/Common
         libIDTF )
 SET( libIDTF_SRCS
 	libIDTF/SceneConverterLib.cpp
@@ -1835,7 +1835,7 @@ target_link_libraries( IDTFGen  IDTF ${CMAKE_DL_LIBS} )
 add_dependencies( IDTFGen  IDTF )
 
 install(
-	TARGETS IDTFGen 
+	TARGETS IDTFGen
 	DESTINATION ${BIN_DESTINATION}
 )
 
