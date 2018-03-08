@@ -790,7 +790,6 @@ extern "C"
 IFXRESULT IFXAPI_CALLTYPE IFXSetDefaultLocale( void )
 {
   IFXRESULT result = IFX_OK;
-  char*     loc    = NULL;
   
   //loc = setlocale(LC_CTYPE, "en_US.UTF-8");
 

@@ -1414,15 +1414,11 @@ void vtkU3DExporter::WriteData()
                             // Textures and vertex colors are not supported
                             if ((numLines > 0) || ((numPolys > 0 || numStrips > 0) && representation == VTK_WIREFRAME))
                             {
-                                vtkPointData *pntData;
-                                vtkCellData *cellData;
                                 vtkPoints *points;
                                 vtkProperty *prop;
                                 vtkUnsignedCharArray *colors = NULL;
 
                                 points = pd->GetPoints();
-                                pntData = pd->GetPointData();
-                                cellData = pd->GetCellData();
 
                                 VTK_CREATE(vtkActor, myActor);
                                 VTK_DECLARE(vtkPolyDataMapper, myPolyDataMapper);
@@ -1477,7 +1473,6 @@ void vtkU3DExporter::WriteData()
                                         pointlocator->InsertUniquePoint(point, CurPoint);
                                         upointIds->InsertNextId(CurPoint);
                                     }
-                                    numPoints = upoints->GetNumberOfPoints();
                                 }
 
                                 vtkIdType  lnumLines = 0;                   // number of lines

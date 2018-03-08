@@ -35,7 +35,6 @@ public:
 
 private:
 
-	CIFXCollisionResult *pResult;
 	U32                  m_uSizeList;
 };
 

@@ -3,7 +3,7 @@ import tempfile
 import vtk
 from vtk.util.keys import StringKey
 from vtk.vtkCommonCore import vtkInformationIterator
-import vtku3dexporterPython
+import vtku3dexporter
 
 
 def write_u3d(file_path, actors):
@@ -17,7 +17,7 @@ def write_u3d(file_path, actors):
 
     renderer.ResetCamera()
 
-    u3d_exporter = vtku3dexporterPython.vtkU3DExporter()
+    u3d_exporter = vtku3dexporter.vtkU3DExporter()
     u3d_exporter.SetFileName(file_path)
     u3d_exporter.SetInput(render_window)
     u3d_exporter.Write()
