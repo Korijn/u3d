@@ -73,7 +73,7 @@ using namespace U3D_IDTF;
 
 // MetaDataList
 
-MetaDataList::MetaDataList() 
+MetaDataList::MetaDataList()
 {
 }
 
@@ -145,7 +145,7 @@ BinaryMetaData::BinaryMetaData( BinaryMetaData& rBinary )
 BinaryMetaData& BinaryMetaData::operator= ( const BinaryMetaData& rBinary )
 {
 	U8* pValue = new U8[rBinary.GetBinarySize()];
-    delete[] m_pValue;
+	delete[] m_pValue;
 	m_pValue = pValue;
 	return *this;
 }
