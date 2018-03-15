@@ -102,7 +102,7 @@ if __name__ == "__main__":
     if not os.path.exists("{}.u3d".format(file_path)):
         raise Exception("Failed to create the U3D file")
 
-    print("Testing that the name of the actor is in the logs...")
-    assert " a9p\n" in open("{}.u3d.DebugInfo.txt".format(file_path)).read()
+    print("Testing that the mesh is in the logs...")
+    assert " Mesh6\n" in open("{}.u3d.DebugInfo.txt".format(file_path)).read()
 
     print("Test successful")
