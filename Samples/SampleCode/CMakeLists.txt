@@ -58,6 +58,8 @@ SET(VTK_MODULES_USED vtkIOExport)
 list(REMOVE_ITEM VTK_LIBRARIES work/vtk/libpython.notreally)
 list(REMOVE_ITEM VTK_LIBRARIES work/vtk/libpython.fake)
 
+MESSAGE(STATUS "Filtered VTK libraries: ${VTK_LIBRARIES}")
+
 # Create vtkU3DExporter shared library
 SET(LIBS ${VTK_LIBRARIES} ${U3D_LIB})
 SET(EXPORTER_SRC vtkU3DExporter.cxx vtkU3DExporter.h)
