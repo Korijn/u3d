@@ -32,34 +32,38 @@ class vtkRenderer;
 class VTKU3DEXPORTER_EXPORT vtkU3DExporter : public vtkExporter
 {
 public:
-  static vtkU3DExporter *New();
-  vtkTypeMacro(vtkU3DExporter,vtkExporter);
+    static vtkU3DExporter *New();
+    vtkTypeMacro(vtkU3DExporter,vtkExporter);
 
-  // Description:
-  // Set/Get the output file name.
-  vtkSetStringMacro(FileName);
-  vtkGetStringMacro(FileName);
+    // Description:
+    // Set/Get the output file name.
+    vtkSetStringMacro(FileName);
+    vtkGetStringMacro(FileName);
 
-  // Description:
-  // Specify if compression of meshes is enabled 
-  vtkSetClampMacro(MeshCompression, int, 0, 1);
-  vtkBooleanMacro(MeshCompression, int);
-  vtkGetMacro(MeshCompression, int);
+    // Description:
+    // Specify if compression of meshes is enabled
+    vtkSetClampMacro(MeshCompression, int, 0, 1);
+    vtkBooleanMacro(MeshCompression, int);
+    vtkGetMacro(MeshCompression, int);
+
+    void PrintSelf(ostream & os, vtkIndent indent) override {}
+    void PrintHeader(ostream & os, vtkIndent indent) override {}
+    void PrintTrailer(ostream & os, vtkIndent indent) override {}
 
 protected:
-  vtkU3DExporter();
-  ~vtkU3DExporter();
+    vtkU3DExporter();
+    ~vtkU3DExporter();
 
-  // Description:
-  // Write data to output.
-  void WriteData();
+    // Description:
+    // Write data to output.
+    void WriteData() override;
 
-  char *FileName;
-  int MeshCompression;
+    char *FileName;
+    int MeshCompression;
 
 private:
-  vtkU3DExporter(const vtkU3DExporter&);  // Not implemented.
-  void operator=(const vtkU3DExporter&);  // Not implemented.
+    vtkU3DExporter(const vtkU3DExporter&);  // Not implemented.
+    void operator=(const vtkU3DExporter&);  // Not implemented.
 
 };
 

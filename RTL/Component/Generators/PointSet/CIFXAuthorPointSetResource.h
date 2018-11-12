@@ -262,8 +262,6 @@ private:
 	// So we are not creating new PointSet spefic classes, but using general IFXMeshMap
 	IFXMeshMap*					m_pAuthorPointSetMap;
  	IFXMeshMap*					m_pRenderPointSetMap;
-
-	BOOL*						m_MaterialUpdated;
 	
 	// pointer to array of iters, one for each material in output ifx Point set.
 	IFXVertexIter* m_pIteratorCache;

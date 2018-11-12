@@ -150,6 +150,7 @@ IFXRESULT SceneUtilities::TestModifierResourceChain(  IFXAuthorCLODResource * in
 	{
 		iResult = IFX_E_NOT_INITIALIZED;
 		IFXASSERT(0);
+		return iResult;
 	}
 
 	// Get access to the resource modifier chain

@@ -55,7 +55,6 @@ private:
 	float binsize;
 	int xbins, ybins, zbins;  ///< dimensions of hashtable array
 	int yzbins;
-	float xspan, yspan, zspan;  ///< value range for each dim of table
 	float yzsize;  ///< ybins*zbins
 	float zsize;   ///< float version of zbins
 	float xtrans, ytrans, ztrans;
