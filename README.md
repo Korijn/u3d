@@ -1,6 +1,7 @@
 This is a fork of ningfei/u3d which is a fork of the v1.4.5 U3D library. It has been updated to support x86 and x64 Windows (VS2008, VS2010, VS2015), Linux and OS X.
 
-See here for an conda package: https://github.com/conda-forge/u3d-feedstock
+There is a pip package of `vtku3dexporter` available at https://anaconda.org/clinicalgraphics/vtku3dexporter.
+The build scripts for that package can be found at https://github.com/berendkleinhaneveld/vtku3dexporterwheel.
 
 # Build scripts
 
