@@ -135,6 +135,8 @@ if(WRAP_PYTHON)
     # install __init__.py to make it importable
     FILE(WRITE __init__.py "\
 from __future__ import absolute_import\n\
+# first importing vtk solves some import problems\n\
+import vtk\n\
 \n\
 try:\n\
     # use relative import for installed modules\n\
