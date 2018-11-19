@@ -55,7 +55,7 @@ SET(VTK_MODULES_USED vtkIOExport)
 
 # Remove the unexisting libpython file from VTK_LIBRARIES
 # Otherwise, build will fail
-list(FILTER VTK_LIBRARIES EXCLUDE REGEX libpython)
+LIST(FILTER VTK_LIBRARIES EXCLUDE REGEX libpython)
 MESSAGE(STATUS "Filtered VTK libraries: ${VTK_LIBRARIES}")
 
 # Create vtkU3DExporter shared library
@@ -119,9 +119,17 @@ if(WRAP_PYTHON)
     ENDFOREACH()
 
     # link 'em up
-    TARGET_LINK_LIBRARIES("${PROJECT_NAME}Python"
-        "${PROJECT_NAME}PythonD"
-        ${VTK_PYTHOND_LIBS})
+    # On linux, don't link the PYTHON_LIBRARIES
+    IF(UNIX AND NOT APPLE)
+        TARGET_LINK_LIBRARIES("${PROJECT_NAME}Python"
+            "${PROJECT_NAME}PythonD"
+            ${VTK_PYTHOND_LIBS})
+    ELSE()
+        TARGET_LINK_LIBRARIES("${PROJECT_NAME}Python"
+            "${PROJECT_NAME}PythonD"
+            ${PYTHON_LIBRARIES}
+            ${VTK_PYTHOND_LIBS})
+    ENDIF(UNIX AND NOT APPLE)
     # prettify the output
     SET_TARGET_PROPERTIES("${PROJECT_NAME}Python" PROPERTIES PREFIX "")
     if(WIN32 AND NOT CYGWIN)
