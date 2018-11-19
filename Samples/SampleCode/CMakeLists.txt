@@ -55,7 +55,7 @@ SET(VTK_MODULES_USED vtkIOExport)
 
 # Remove the unexisting libpython file from VTK_LIBRARIES
 # Otherwise, build will fail
-LIST(FILTER VTK_LIBRARIES EXCLUDE REGEX libpython)
+LIST(FILTER VTK_LIBRARIES EXCLUDE REGEX libpython|.lib)
 MESSAGE(STATUS "Filtered VTK libraries: ${VTK_LIBRARIES}")
 
 # Create vtkU3DExporter shared library
