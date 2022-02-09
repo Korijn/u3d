@@ -1,3 +1,8 @@
+U3D
+===
+
+[![CI](https://github.com/ClinicalGraphics/u3d/actions/workflows/CI.yml/badge.svg)](https://github.com/ClinicalGraphics/u3d/actions/workflows/CI.yml)
+
 This is a fork of ningfei/u3d which is a fork of the v1.4.5 U3D library. It has been updated to support x86 and x64 Windows (VS2008, VS2010, VS2015), Linux and OS X.
 
 There is a pip package of `vtku3dexporter` available at https://anaconda.org/clinicalgraphics/vtku3dexporter.
