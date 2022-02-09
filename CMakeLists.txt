@@ -11,26 +11,26 @@ add_definitions( -DU3D_NO_ASM )
 
 if( CMAKE_GENERATOR STREQUAL "Unix Makefiles" )
 set(CMAKE_VERBOSE_MAKEFILE ON)
-endif( CMAKE_GENERATOR STREQUAL "Unix Makefiles" )
+endif()
 
 # add debug definitions
 if( CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" )
   add_definitions( -D_DEBUG -DDEBUG )
   message( STATUS "DEBUG BUILD" )
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
-else( CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" )
+else()
   message( STATUS "RELEASE BUILD" )
   add_definitions( -DNDEBUG )
-endif( CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" )
+endif()
 
 if( NOT MSVC )
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-endif( NOT MSVC )
+endif()
 
 if(APPLE)
   add_definitions( -DMAC32 -fno-strict-aliasing )
   set( U3D_PLATFORM Mac32 )
-endif(APPLE)
+endif()
 
 if(WIN32)
   add_definitions( -DUNICODE -D_UNICODE -D_CRT_SECURE_NO_DEPRECATE )
@@ -40,12 +40,12 @@ if(WIN32)
   unset( CMAKE_SHARED_MODULE_PREFIX )
   unset( CMAKE_STATIC_LIBRARY_PREFIX )
   unset( CMAKE_IMPORT_LIBRARY_PREFIX )
-endif(WIN32)
+endif()
 
 if(UNIX AND NOT APPLE)
   add_definitions( -DLIN32 -fno-strict-aliasing )
   set( U3D_PLATFORM Lin32 )
-endif(UNIX AND NOT APPLE)
+endif()
 
 message(STATUS "U3D_SHARED: " ${U3D_SHARED} )
 
@@ -96,9 +96,9 @@ set_property( SOURCE
 set_property( SOURCE
   RTL/Platform/${U3D_PLATFORM}/Common/IFXOSLoader.cpp
   PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="." U3DCorePath="${CMAKE_INSTALL_PREFIX}/${LIB_DESTINATION}" STDIO_HACK )
-endif(STDIO_HACK)
+endif()
 
-else(U3D_SHARED)
+else()
   set( LIB_DESTINATION u3d )
   set( BIN_DESTINATION u3d )
   set( INCLUDE_DESTINATION u3d/include )
@@ -240,7 +240,7 @@ set(libpng_sources
 
 if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
-endif(MSVC)
+endif()
 
 set(ADDITIONAL_LIBRARIES ${ADDITIONAL_LIBRARIES} ${M_LIBRARY})
 include_directories(${PNG_SOURCE_DIR})
@@ -338,9 +338,9 @@ set_property( SOURCE
 set_property( SOURCE
     RTL/Platform/${U3D_PLATFORM}/Common/IFXOSLoader.cpp
     PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="Plugins" U3DCorePath="." STDIO_HACK )
-endif(STDIO_HACK)
+endif()
 
-endif(U3D_SHARED)
+endif()
 
 message( STATUS "CMAKE_INSTALL_PREFIX:         " ${CMAKE_INSTALL_PREFIX} )
 message( STATUS "LIB_DESTINATION:         " ${LIB_DESTINATION} )
@@ -1134,18 +1134,18 @@ set( IFXCore_HDRS
 if(WIN32)
   set( CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Win32/IFXCore )
   add_library( IFXCore SHARED ${IFXCore_SRCS} ${IFXCore_HDRS} ${CORE_DIR}/IFXCore.rc ${CORE_DIR}/IFXResource.h ${CORE_DIR}/IFXCore.def ${DEPENDENCIES_SRCS} )
-endif(WIN32)
+endif()
 if(APPLE)
   add_library( IFXCore MODULE ${IFXCore_SRCS} ${IFXCore_HDRS} ${DEPENDENCIES_SRCS} )
   set_target_properties( IFXCore PROPERTIES
     LINK_FLAGS "${MY_LINK_FLAGS} -exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Mac32/IFXCore/IFXCore.def" )
-endif(APPLE)
+endif()
 if(UNIX AND NOT APPLE)
   add_library( IFXCore MODULE ${IFXCore_SRCS} ${IFXCore_HDRS} ${DEPENDENCIES_SRCS} )
   set_target_properties( IFXCore PROPERTIES
     LINK_FLAGS "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Lin32/IFXCore/IFXCore.list -Wl,--no-undefined" )
   target_link_libraries( IFXCore ${CMAKE_DL_LIBS} )
-endif(UNIX AND NOT APPLE)
+endif()
 target_link_libraries( IFXCore ${ADDITIONAL_LIBRARIES} )
 install(
     TARGETS IFXCore
@@ -1243,17 +1243,17 @@ if(WIN32)
   set( EXPORT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Win32/IFXExporting )
   add_library( IFXExporting  SHARED ${IFXExporting_SRCS} ${IFXExporting_HDRS} ${EXPORT_DIR}/IFXExporting.rc ${EXPORT_DIR}/IFXResource.h ${EXPORT_DIR}/IFXExporting.def )
   target_link_libraries( IFXExporting IFXCore )
-endif(WIN32)
+endif()
 if(APPLE)
   add_library( IFXExporting  MODULE ${IFXExporting_SRCS} ${IFXExporting_HDRS} )
   set_target_properties( IFXExporting  PROPERTIES
     LINK_FLAGS "${MY_LINK_FLAGS} -exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Mac32/IFXExporting/IFXExporting.def   -undefined dynamic_lookup" )
-endif(APPLE)
+endif()
 if(UNIX AND NOT APPLE)
   add_library( IFXExporting  MODULE ${IFXExporting_SRCS} ${IFXExporting_HDRS} )
   set_target_properties( IFXExporting  PROPERTIES
     LINK_FLAGS "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Lin32/IFXExporting/IFXExporting.list" )
-endif(UNIX AND NOT APPLE)
+endif()
 install(
     TARGETS IFXExporting
     RUNTIME DESTINATION ${BIN_DESTINATION}
@@ -1358,17 +1358,17 @@ if(WIN32)
   set( IMPORT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Win32/IFXImporting )
   add_library( IFXImporting  SHARED ${IFXImporting_SRCS} ${IFXImporting_HDRS} ${IMPORT_DIR}/IFXImporting.rc ${IMPORT_DIR}/IFXResource.h ${IMPORT_DIR}/IFXImporting.def )
   target_link_libraries( IFXImporting IFXCore ws2_32 )
-endif(WIN32)
+endif()
 if(APPLE)
   add_library( IFXImporting  MODULE ${IFXImporting_SRCS} ${IFXImporting_HDRS} )
   set_target_properties( IFXImporting  PROPERTIES
     LINK_FLAGS "${MY_LINK_FLAGS} -exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Mac32/IFXImporting/IFXImporting.def   -undefined dynamic_lookup" )
-endif(APPLE)
+endif()
 if(UNIX AND NOT APPLE)
   add_library( IFXImporting  MODULE ${IFXImporting_SRCS} ${IFXImporting_HDRS} )
   set_target_properties( IFXImporting  PROPERTIES
     LINK_FLAGS "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Lin32/IFXImporting/IFXImporting.list" )
-endif(UNIX AND NOT APPLE)
+endif()
 install(
     TARGETS IFXImporting
     RUNTIME DESTINATION ${BIN_DESTINATION}
@@ -1477,17 +1477,17 @@ if(WIN32)
   set( SCHED_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Win32/IFXScheduling )
   add_library( IFXScheduling  SHARED ${IFXScheduling_SRCS} ${IFXScheduling_HDRS} ${SCHED_DIR}/IFXScheduling.rc ${SCHED_DIR}/IFXResource.h ${SCHED_DIR}/IFXScheduling.def )
   target_link_libraries( IFXScheduling IFXCore )
-endif(WIN32)
+endif()
 if(APPLE)
   add_library( IFXScheduling  MODULE ${IFXScheduling_SRCS} ${IFXScheduling_HDRS} )
   set_target_properties( IFXScheduling  PROPERTIES
     LINK_FLAGS "${MY_LINK_FLAGS} -exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Mac32/IFXScheduling/IFXScheduling.def   -undefined dynamic_lookup" )
-endif(APPLE)
+endif()
 if(UNIX AND NOT APPLE)
   add_library( IFXScheduling  MODULE ${IFXScheduling_SRCS} ${IFXScheduling_HDRS} )
   set_target_properties( IFXScheduling  PROPERTIES
     LINK_FLAGS "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Lin32/IFXScheduling/IFXScheduling.list" )
-endif(UNIX AND NOT APPLE)
+endif()
 install(
     TARGETS IFXScheduling
     RUNTIME DESTINATION ${BIN_DESTINATION}
@@ -1645,15 +1645,15 @@ set( IDTFConverter_HDRS
 )
 if(WIN32)
   add_executable( IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS} IDTF/IDTFConverter.rc IDTF/IFXResource.h )
-endif(WIN32)
+endif()
 if(APPLE)
   add_executable( IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS} )
     set_target_properties( IDTFConverter  PROPERTIES
     LINK_FLAGS "${MY_LINK_FLAGS} -exported_symbols_list /dev/null" )
-endif(APPLE)
+endif()
 if(UNIX AND NOT APPLE)
   add_executable( IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS} )
-endif(UNIX AND NOT APPLE)
+endif()
 target_link_libraries( IDTFConverter  IFXCoreStatic ${CMAKE_DL_LIBS} )
 add_dependencies( IDTFConverter  IFXCoreStatic )
 install(
@@ -1809,16 +1809,16 @@ if( U3D_SHARED )
 set_property( SOURCE
     libIDTF/IFXOSLoader.cpp
     PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="." U3DCorePath="${CMAKE_INSTALL_PREFIX}/${LIB_DESTINATION}" )
-else( U3D_SHARED )
+else()
 set_property( SOURCE
     libIDTF/IFXOSLoader.cpp
     PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="Plugins" U3DCorePath="." )
-endif( U3D_SHARED )
+endif()
 if(MSVC)
 add_library( IDTF STATIC ${libIDTF_SRCS} ${libIDTF_HDRS} )
-else(MSVC)
+else()
 add_library( IDTF SHARED ${libIDTF_SRCS} ${libIDTF_HDRS} )
-endif(MSVC)
+endif()
 set_property(
     TARGET IDTF
     PROPERTY COMPILE_DEFINITIONS LIBIDTF )
