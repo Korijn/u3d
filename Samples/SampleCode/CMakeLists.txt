@@ -1,146 +1,146 @@
-PROJECT(vtku3dexporter)
-CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
+project(vtku3dexporter)
+cmake_minimum_required(VERSION 3.5)
 
-SET(CMAKE_CXX_STANDARD 11)
-SET(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-OPTION(WRAP_PYTHON "Build Python wrappers" ON)
+option(WRAP_PYTHON "Build Python wrappers" ON)
 
 # Use INSTALL_PYTHON_MODULE_DIR to manipulate where your lib and
 # bin files will go. Useful for building wheels.
-IF(NOT INSTALL_PYTHON_MODULE_DIR)
-    SET(INSTALL_PYTHON_MODULE_DIR ".")
-ENDIF()
+if(NOT INSTALL_PYTHON_MODULE_DIR)
+    set(INSTALL_PYTHON_MODULE_DIR ".")
+endif()
 
-IF(NOT LIB_DESTINATION)
-    SET(LIB_DESTINATION "${INSTALL_PYTHON_MODULE_DIR}")
-ENDIF()
-IF(NOT BIN_DESTINATION)
-    SET(BIN_DESTINATION "${INSTALL_PYTHON_MODULE_DIR}/bin")
-ENDIF()
-IF(NOT INCLUDE_DESTINATION)
-    SET(INCLUDE_DESTINATION "include/${PROJECT_NAME}")
-ENDIF()
+if(NOT LIB_DESTINATION)
+    set(LIB_DESTINATION "${INSTALL_PYTHON_MODULE_DIR}")
+endif()
+if(NOT BIN_DESTINATION)
+    set(BIN_DESTINATION "${INSTALL_PYTHON_MODULE_DIR}/bin")
+endif()
+if(NOT INCLUDE_DESTINATION)
+    set(INCLUDE_DESTINATION "include/${PROJECT_NAME}")
+endif()
 
-MESSAGE( STATUS "CMAKE_INSTALL_PREFIX:    " ${CMAKE_INSTALL_PREFIX} )
-MESSAGE( STATUS "LIB_DESTINATION:         " ${LIB_DESTINATION} )
+message( STATUS "CMAKE_INSTALL_PREFIX:    " ${CMAKE_INSTALL_PREFIX} )
+message( STATUS "LIB_DESTINATION:         " ${LIB_DESTINATION} )
 
 # Include the source directory to make sure that out-of-source
 # builds can find the proper headers.
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # Find U3D
-FIND_LIBRARY(U3D_LIB NAMES IDTF)
-IF(NOT U3D_LIB)
-    MESSAGE(FATAL_ERROR "Could not find U3D library")
-ENDIF()
-MESSAGE(STATUS "Found U3D library at: ${U3D_LIB}")
+find_library(U3D_LIB NAMES IDTF)
+if(NOT U3D_LIB)
+    message(FATAL_ERROR "Could not find U3D library")
+endif()
+message(STATUS "Found U3D library at: ${U3D_LIB}")
 
-FIND_PATH(U3D_INCLUDE_DIR u3d/SceneConverterLib.h)
-IF(NOT U3D_INCLUDE_DIR)
-    MESSAGE(FATAL_ERROR "Could not find U3D include dir")
-ENDIF()
-MESSAGE(STATUS "Found U3D include dir: ${U3D_INCLUDE_DIR}")
-INCLUDE_DIRECTORIES(${U3D_INCLUDE_DIR}/u3d)
+find_path(U3D_INCLUDE_DIR u3d/SceneConverterLib.h)
+if(NOT U3D_INCLUDE_DIR)
+    message(FATAL_ERROR "Could not find U3D include dir")
+endif()
+message(STATUS "Found U3D include dir: ${U3D_INCLUDE_DIR}")
+include_directories(${U3D_INCLUDE_DIR}/u3d)
 
 # Find VTK
-FIND_PACKAGE(VTK REQUIRED
+find_package(VTK REQUIRED
     vtkIOExport
     vtkRenderingCore
     vtkWrappingPythonCore)
-MESSAGE(STATUS "Found VTK libraries: ${VTK_LIBRARIES}")
-MESSAGE(STATUS "Found UseVTK.cmake: ${VTK_USE_FILE}")
-INCLUDE(${VTK_USE_FILE})
-SET(VTK_MODULES_USED vtkIOExport)
+message(STATUS "Found VTK libraries: ${VTK_LIBRARIES}")
+message(STATUS "Found UseVTK.cmake: ${VTK_USE_FILE}")
+include(${VTK_USE_FILE})
+set(VTK_MODULES_USED vtkIOExport)
 
 # Remove the unexisting libpython file from VTK_LIBRARIES
 # Otherwise, build will fail
-LIST(FILTER VTK_LIBRARIES EXCLUDE REGEX libpython|\.lib)
-MESSAGE(STATUS "Filtered VTK libraries: ${VTK_LIBRARIES}")
+list(FILTER VTK_LIBRARIES EXCLUDE REGEX libpython|\.lib)
+message(STATUS "Filtered VTK libraries: ${VTK_LIBRARIES}")
 
 # Create vtkU3DExporter shared library
-SET(LIBS ${VTK_LIBRARIES} ${U3D_LIB})
-SET(EXPORTER_SRC vtkU3DExporter.cxx vtkU3DExporter.h)
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${EXPORTER_SRC})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+set(LIBS ${VTK_LIBRARIES} ${U3D_LIB})
+set(EXPORTER_SRC vtkU3DExporter.cxx vtkU3DExporter.h)
+add_library(${PROJECT_NAME} SHARED ${EXPORTER_SRC})
+target_link_libraries(${PROJECT_NAME}
     ${LIBS})
-IF(WIN32)
-    TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME}
         winmm)
-ENDIF(WIN32)
-INSTALL(TARGETS ${PROJECT_NAME}
+endif(WIN32)
+install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${BIN_DESTINATION}
     ARCHIVE DESTINATION ${LIB_DESTINATION}
     LIBRARY DESTINATION ${LIB_DESTINATION}
 )
-INSTALL(DIRECTORY .
+install(DIRECTORY .
     DESTINATION ${INCLUDE_DESTINATION}
     FILES_MATCHING PATTERN "*.h"
     PATTERN "CMake" EXCLUDE
 )
-MESSAGE(STATUS "Added library: " "${PROJECT_NAME}")
+message(STATUS "Added library: " "${PROJECT_NAME}")
 
 if(WRAP_PYTHON)
     # Find Python
-    FIND_PACKAGE(PythonLibs REQUIRED)
-    MESSAGE(STATUS "Found Python include dir: " ${PYTHON_INCLUDE_DIRS} )
-    MESSAGE(STATUS "Found Python library: " ${PYTHON_LIBRARIES} )
-    INCLUDE_DIRECTORIES("${PYTHON_INCLUDE_DIRS}")
+    find_package(PythonLibs REQUIRED)
+    message(STATUS "Found Python include dir: " ${PYTHON_INCLUDE_DIRS} )
+    message(STATUS "Found Python library: " ${PYTHON_LIBRARIES} )
+    include_directories("${PYTHON_INCLUDE_DIRS}")
 
     # Generate VTK Python wrappers
-    INCLUDE(vtkWrapPython)
+    include(vtkWrapPython)
     # despite the name, this works for any Python version (tested up to 3.5)
     VTK_WRAP_PYTHON3(${PROJECT_NAME}Python PYTHON_SRCS "${EXPORTER_SRC}")
-    MESSAGE(STATUS "Generated Python wrappers: " "${PYTHON_SRCS}")
+    message(STATUS "Generated Python wrappers: " "${PYTHON_SRCS}")
 
     # Create PythonD library (brings everything together)
-    ADD_LIBRARY("${PROJECT_NAME}PythonD" ${PYTHON_SRCS} "${EXPORTER_SRC}")
-    SET_TARGET_PROPERTIES("${PROJECT_NAME}PythonD" PROPERTIES POSITION_INDEPENDENT_CODE ON)
-    IF(WIN32)
-        TARGET_LINK_LIBRARIES("${PROJECT_NAME}PythonD"
+    add_library("${PROJECT_NAME}PythonD" ${PYTHON_SRCS} "${EXPORTER_SRC}")
+    set_target_properties("${PROJECT_NAME}PythonD" PROPERTIES POSITION_INDEPENDENT_CODE ON)
+    if(WIN32)
+        target_link_libraries("${PROJECT_NAME}PythonD"
             winmm)
-    ENDIF(WIN32)
-    TARGET_LINK_LIBRARIES("${PROJECT_NAME}PythonD"
+    endif(WIN32)
+    target_link_libraries("${PROJECT_NAME}PythonD"
         ${LIBS}
         vtkWrappingPythonCore
         ${VTK_PYTHON_LIBRARIES})
-    INSTALL(TARGETS "${PROJECT_NAME}PythonD"
+    install(TARGETS "${PROJECT_NAME}PythonD"
         RUNTIME DESTINATION ${BIN_DESTINATION}
         ARCHIVE DESTINATION ${LIB_DESTINATION}
         LIBRARY DESTINATION ${LIB_DESTINATION}
     )
 
     # Create Python library (exposes to Python through a pyd)
-    ADD_LIBRARY("${PROJECT_NAME}Python" MODULE "${PROJECT_NAME}PythonInit.cxx" "${PROJECT_NAME}PythonInitImpl.cxx")
+    add_library("${PROJECT_NAME}Python" MODULE "${PROJECT_NAME}PythonInit.cxx" "${PROJECT_NAME}PythonInitImpl.cxx")
     # collect the used pythonD libs in VTK_PYTHOND_LIBS
-    SET(VTK_PYTHOND_LIBS)
-    FOREACH(TMP_LIB ${VTK_MODULES_USED})
-        SET(VTK_PYTHOND_LIBS ${VTK_PYTHOND_LIBS} ${TMP_LIB}PythonD)
-    ENDFOREACH()
+    set(VTK_PYTHOND_LIBS)
+    foreach(TMP_LIB ${VTK_MODULES_USED})
+        set(VTK_PYTHOND_LIBS ${VTK_PYTHOND_LIBS} ${TMP_LIB}PythonD)
+    endforeach()
 
     # link 'em up
     # On linux, don't link the PYTHON_LIBRARIES
-    IF(UNIX AND NOT APPLE)
-        TARGET_LINK_LIBRARIES("${PROJECT_NAME}Python"
+    if(UNIX AND NOT APPLE)
+        target_link_libraries("${PROJECT_NAME}Python"
             "${PROJECT_NAME}PythonD"
             ${VTK_PYTHOND_LIBS})
-    ELSE()
-        TARGET_LINK_LIBRARIES("${PROJECT_NAME}Python"
+    else()
+        target_link_libraries("${PROJECT_NAME}Python"
             "${PROJECT_NAME}PythonD"
             ${PYTHON_LIBRARIES}
             ${VTK_PYTHOND_LIBS})
-    ENDIF(UNIX AND NOT APPLE)
+    endif(UNIX AND NOT APPLE)
     # prettify the output
-    SET_TARGET_PROPERTIES("${PROJECT_NAME}Python" PROPERTIES PREFIX "")
+    set_target_properties("${PROJECT_NAME}Python" PROPERTIES PREFIX "")
     if(WIN32 AND NOT CYGWIN)
-        SET_TARGET_PROPERTIES("${PROJECT_NAME}Python" PROPERTIES SUFFIX ".pyd")
+        set_target_properties("${PROJECT_NAME}Python" PROPERTIES SUFFIX ".pyd")
     endif(WIN32 AND NOT CYGWIN)
     # install command for the pyd
-    INSTALL(TARGETS "${PROJECT_NAME}Python"
+    install(TARGETS "${PROJECT_NAME}Python"
         LIBRARY DESTINATION "${INSTALL_PYTHON_MODULE_DIR}/${PROJECT_NAME}"
     )
     # install __init__.py to make it importable
-    FILE(WRITE __init__.py "\
+    file(WRITE __init__.py "\
 from __future__ import absolute_import\n\
 # first importing vtk solves some import problems\n\
 import vtk\n\
@@ -153,7 +153,7 @@ except ImportError:\n\
     # e.g. in lib directory or Release/Debug config directories\n\
     from ${PROJECT_NAME}Python import *\n\
 ")
-    INSTALL(FILES __init__.py
+    install(FILES __init__.py
         DESTINATION "${INSTALL_PYTHON_MODULE_DIR}/${PROJECT_NAME}"
     )
 
