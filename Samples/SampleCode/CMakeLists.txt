@@ -67,7 +67,7 @@ target_link_libraries(${PROJECT_NAME}
 if(WIN32)
     target_link_libraries(${PROJECT_NAME}
         winmm)
-endif(WIN32)
+endif()
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${BIN_DESTINATION}
     ARCHIVE DESTINATION ${LIB_DESTINATION}
@@ -99,7 +99,7 @@ if(WRAP_PYTHON)
     if(WIN32)
         target_link_libraries("${PROJECT_NAME}PythonD"
             winmm)
-    endif(WIN32)
+    endif()
     target_link_libraries("${PROJECT_NAME}PythonD"
         ${LIBS}
         vtkWrappingPythonCore
@@ -129,12 +129,12 @@ if(WRAP_PYTHON)
             "${PROJECT_NAME}PythonD"
             ${PYTHON_LIBRARIES}
             ${VTK_PYTHOND_LIBS})
-    endif(UNIX AND NOT APPLE)
+    endif()
     # prettify the output
     set_target_properties("${PROJECT_NAME}Python" PROPERTIES PREFIX "")
     if(WIN32 AND NOT CYGWIN)
         set_target_properties("${PROJECT_NAME}Python" PROPERTIES SUFFIX ".pyd")
-    endif(WIN32 AND NOT CYGWIN)
+    endif()
     # install command for the pyd
     install(TARGETS "${PROJECT_NAME}Python"
         LIBRARY DESTINATION "${INSTALL_PYTHON_MODULE_DIR}/${PROJECT_NAME}"
@@ -158,4 +158,4 @@ except ImportError:\n\
     )
 
 
-endif(WRAP_PYTHON)
+endif()
