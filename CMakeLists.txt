@@ -5,6 +5,9 @@ if(NOT DEFINED U3D_SHARED)
   option(U3D_SHARED "Use system libraries for jpeg, png and z instead of bundled" ON)
 endif()
 
+option(U3D_BUILD_IDTFConverter "Build IDTFConverter" ON)
+option(U3D_BUILD_SAMPLES "Build HelloU3DWorld and IDTFGen" ON)
+
 # I do not want to support asm code, so disable it
 # there were real problems with cpuid on Ubuntu 13.04 i386
 add_definitions( -DU3D_NO_ASM )
@@ -1643,6 +1646,7 @@ set( IDTFConverter_HDRS
     IDTF/Common/ViewResource.h
     IDTF/Common/ViewResourceList.h
 )
+if(U3D_BUILD_IDTFConverter)
 if(WIN32)
   add_executable( IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS} IDTF/IDTFConverter.rc IDTF/IFXResource.h )
 endif()
@@ -1660,6 +1664,7 @@ install(
     TARGETS IDTFConverter
     DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
 )
+endif()
 
 include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
     RTL/Dependencies/WildCards
@@ -1827,6 +1832,8 @@ install(
     ARCHIVE DESTINATION ${LIB_DESTINATION} COMPONENT Development
     LIBRARY DESTINATION ${LIB_DESTINATION} COMPONENT Runtime
 )
+
+if(U3D_BUILD_SAMPLES)
 add_executable( IDTFGen Samples/SampleCode/IDTFGen.cpp ${libIDTF_HDRS} )
 target_link_libraries( IDTFGen  IDTF ${CMAKE_DL_LIBS} )
 add_dependencies( IDTFGen  IDTF )
@@ -1835,9 +1842,11 @@ install(
     TARGETS IDTFGen
     DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
 )
+endif()
 
 
 #include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include )
+if(U3D_BUILD_SAMPLES)
 add_executable( HelloU3DWorld
     Samples/SampleCode/HelloWorld.cpp
     ${Component_HDRS} ${Kernel_HDRS} ${Platform_HDRS} )
@@ -1848,6 +1857,7 @@ install(
     TARGETS HelloU3DWorld
     DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
 )
+endif()
 
 install( DIRECTORY RTL/Component/Include/ RTL/Kernel/Include/ RTL/Platform/Include/
     DESTINATION ${INCLUDE_DESTINATION}
@@ -1862,6 +1872,7 @@ install( FILES ${libIDTF_HDRS}
     DESTINATION ${INCLUDE_DESTINATION}
     COMPONENT Development
 )
+if(U3D_BUILD_SAMPLES)
 install( FILES
     Samples/SampleCode/HelloWorld.cpp
     Samples/SampleCode/IDTFGen.cpp
@@ -1878,6 +1889,7 @@ install( DIRECTORY Samples/TestScenes
     COMPONENT Development
     PATTERN "Makef*" EXCLUDE
 )
+endif()
 install( DIRECTORY Docs/
     DESTINATION ${DOC_DESTINATION}
     PATTERN "Makef*" EXCLUDE
