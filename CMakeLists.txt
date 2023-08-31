@@ -260,6 +260,10 @@ endif()
 set(ADDITIONAL_LIBRARIES ${ADDITIONAL_LIBRARIES} ${M_LIBRARY})
 include_directories(${PNG_SOURCE_DIR})
 
+#============================================================================
+# jpeg
+#============================================================================
+
 CHECK_INCLUDE_FILE(stdlib.h HAVE_STDLIB_H)
 
 set(JPEG_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Dependencies/jpeg)
