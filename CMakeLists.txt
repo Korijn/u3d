@@ -53,53 +53,55 @@ endif()
 message(STATUS "U3D_SHARED: " ${U3D_SHARED} )
 
 if(U3D_SHARED)
- if(NOT LIB_DESTINATION)
-   set( LIB_DESTINATION lib )
- endif()
- if(NOT BIN_DESTINATION)
-   set( BIN_DESTINATION bin )
- endif()
- if(NOT INCLUDE_DESTINATION)
-   set( INCLUDE_DESTINATION include/u3d )
- endif()
- if(NOT PLUGIN_DESTINATION)
-   set( PLUGIN_DESTINATION lib )
- endif()
- if(NOT SAMPLE_DESTINATION)
-   set( SAMPLE_DESTINATION share/u3d/samples )
- endif()
- if(NOT DOC_DESTINATION)
-   set( DOC_DESTINATION share/u3d/docs )
- endif()
-# check zlib availibility
-find_package(ZLIB REQUIRED)
-include_directories(${ZLIB_INCLUDE_DIR})
-set(ADDITIONAL_LIBRARIES ${ADDITIONAL_LIBRARIES} ${ZLIB_LIBRARIES})
+  if(NOT LIB_DESTINATION)
+    set( LIB_DESTINATION lib )
+  endif()
+  if(NOT BIN_DESTINATION)
+    set( BIN_DESTINATION bin )
+  endif()
+  if(NOT INCLUDE_DESTINATION)
+    set( INCLUDE_DESTINATION include/u3d )
+  endif()
+  if(NOT PLUGIN_DESTINATION)
+    set( PLUGIN_DESTINATION lib )
+  endif()
+  if(NOT SAMPLE_DESTINATION)
+    set( SAMPLE_DESTINATION share/u3d/samples )
+  endif()
+  if(NOT DOC_DESTINATION)
+    set( DOC_DESTINATION share/u3d/docs )
+  endif()
 
-# check png availibility
-find_package(PNG REQUIRED)
-include_directories(${PNG_INCLUDE_DIR})
-add_definitions(${PNG_DEFINITIONS})
-set(ADDITIONAL_LIBRARIES ${ADDITIONAL_LIBRARIES} ${PNG_LIBRARIES})
+  # check zlib availibility
+  find_package(ZLIB REQUIRED)
+  include_directories(${ZLIB_INCLUDE_DIR})
+  set(ADDITIONAL_LIBRARIES ${ADDITIONAL_LIBRARIES} ${ZLIB_LIBRARIES})
 
-# check jpeg availibility
-find_package(JPEG REQUIRED)
-include_directories(${JPEG_INCLUDE_DIR})
-set(ADDITIONAL_LIBRARIES ${ADDITIONAL_LIBRARIES} ${JPEG_LIBRARIES})
+  # check png availibility
+  find_package(PNG REQUIRED)
+  include_directories(${PNG_INCLUDE_DIR})
+  add_definitions(${PNG_DEFINITIONS})
+  set(ADDITIONAL_LIBRARIES ${ADDITIONAL_LIBRARIES} ${PNG_LIBRARIES})
 
-set_property( SOURCE
-  RTL/Platform/${U3D_PLATFORM}/Common/IFXOSLoader.cpp
-  PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="." U3DCorePath="${CMAKE_INSTALL_PREFIX}/${LIB_DESTINATION}" )
-if(STDIO_HACK)
-set_property( SOURCE
-  RTL/Component/Exporting/CIFXStdioWriteBufferX.cpp
-  IDTF/ConverterDriver.cpp
-  IDTF/File.cpp
-  PROPERTY COMPILE_DEFINITIONS STDIO_HACK )
-set_property( SOURCE
-  RTL/Platform/${U3D_PLATFORM}/Common/IFXOSLoader.cpp
-  PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="." U3DCorePath="${CMAKE_INSTALL_PREFIX}/${LIB_DESTINATION}" STDIO_HACK )
-endif()
+  # check jpeg availibility
+  find_package(JPEG REQUIRED)
+  include_directories(${JPEG_INCLUDE_DIR})
+  set(ADDITIONAL_LIBRARIES ${ADDITIONAL_LIBRARIES} ${JPEG_LIBRARIES})
+
+  set_property( SOURCE
+    RTL/Platform/${U3D_PLATFORM}/Common/IFXOSLoader.cpp
+    PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="." U3DCorePath="${CMAKE_INSTALL_PREFIX}/${LIB_DESTINATION}" )
+
+  if(STDIO_HACK)
+    set_property( SOURCE
+      RTL/Component/Exporting/CIFXStdioWriteBufferX.cpp
+      IDTF/ConverterDriver.cpp
+      IDTF/File.cpp
+      PROPERTY COMPILE_DEFINITIONS STDIO_HACK )
+    set_property( SOURCE
+      RTL/Platform/${U3D_PLATFORM}/Common/IFXOSLoader.cpp
+      PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="." U3DCorePath="${CMAKE_INSTALL_PREFIX}/${LIB_DESTINATION}" STDIO_HACK )
+  endif()
 
 else()
   if(NOT DEFINED LIB_DESTINATION)
@@ -120,244 +122,244 @@ else()
   if(NOT DEFINED DOC_DESTINATION)
     set( DOC_DESTINATION u3d/docs )
   endif()
-#============================================================================
-# zlib
-#============================================================================
 
-include(CheckTypeSize)
-include(CheckFunctionExists)
-include(CheckIncludeFile)
-include(CheckCSourceCompiles)
+  #============================================================================
+  # zlib
+  #============================================================================
 
-check_include_file(sys/types.h HAVE_SYS_TYPES_H)
-check_include_file(stdint.h    HAVE_STDINT_H)
-check_include_file(stddef.h    HAVE_STDDEF_H)
+  include(CheckTypeSize)
+  include(CheckFunctionExists)
+  include(CheckIncludeFile)
+  include(CheckCSourceCompiles)
 
-#
-# Check to see if we have large file support
-#
-set(CMAKE_REQUIRED_DEFINITIONS -D_LARGEFILE64_SOURCE=1)
-check_type_size(off64_t OFF64_T)
-if(HAVE_OFF64_T)
-  add_definitions(-D_LARGEFILE64_SOURCE=1)
-endif()
-set(CMAKE_REQUIRED_DEFINITIONS) # clear variable
+  check_include_file(sys/types.h HAVE_SYS_TYPES_H)
+  check_include_file(stdint.h    HAVE_STDINT_H)
+  check_include_file(stddef.h    HAVE_STDDEF_H)
 
-#
-# Check for fseeko
-#
-check_function_exists(fseeko HAVE_FSEEKO)
-if(NOT HAVE_FSEEKO)
-  add_definitions(-DNO_FSEEKO)
-endif()
-
-#
-# Check for unistd.h
-#
-check_include_file(unistd.h Z_HAVE_UNISTD_H)
-
-if(MSVC)
-  add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
-  add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
-endif()
-
-set(ZLIB_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Dependencies/zlib)
-configure_file(${ZLIB_SOURCE_DIR}/zconf.h.cmakein
-               ${CMAKE_CURRENT_BINARY_DIR}/zconf.h @ONLY)
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories(${ZLIB_SOURCE_DIR})
-
-
-set(ZLIB_PUBLIC_HDRS
-  ${CMAKE_CURRENT_BINARY_DIR}/zconf.h
-  ${ZLIB_SOURCE_DIR}/zlib.h
-)
-set(ZLIB_PRIVATE_HDRS
-  ${ZLIB_SOURCE_DIR}/crc32.h
-  ${ZLIB_SOURCE_DIR}/deflate.h
-  ${ZLIB_SOURCE_DIR}/gzguts.h
-  ${ZLIB_SOURCE_DIR}/inffast.h
-  ${ZLIB_SOURCE_DIR}/inffixed.h
-  ${ZLIB_SOURCE_DIR}/inflate.h
-  ${ZLIB_SOURCE_DIR}/inftrees.h
-  ${ZLIB_SOURCE_DIR}/trees.h
-  ${ZLIB_SOURCE_DIR}/zutil.h
-)
-set(ZLIB_SRCS
-  ${ZLIB_SOURCE_DIR}/adler32.c
-  ${ZLIB_SOURCE_DIR}/compress.c
-  ${ZLIB_SOURCE_DIR}/crc32.c
-  ${ZLIB_SOURCE_DIR}/deflate.c
-  ${ZLIB_SOURCE_DIR}/gzclose.c
-  ${ZLIB_SOURCE_DIR}/gzlib.c
-  ${ZLIB_SOURCE_DIR}/gzread.c
-  ${ZLIB_SOURCE_DIR}/gzwrite.c
-  ${ZLIB_SOURCE_DIR}/inflate.c
-  ${ZLIB_SOURCE_DIR}/infback.c
-  ${ZLIB_SOURCE_DIR}/inftrees.c
-  ${ZLIB_SOURCE_DIR}/inffast.c
-  ${ZLIB_SOURCE_DIR}/trees.c
-  ${ZLIB_SOURCE_DIR}/uncompr.c
-  ${ZLIB_SOURCE_DIR}/zutil.c
-)
-
-
-#============================================================================
-# png
-#============================================================================
-
-if(NOT WIN32)
-  find_library(M_LIBRARY
-    NAMES m
-    PATHS /usr/lib /usr/local/lib
-  )
-  if(NOT M_LIBRARY)
-    message(STATUS
-      "math library 'libm' not found - floating point support disabled")
+  #
+  # Check to see if we have large file support
+  #
+  set(CMAKE_REQUIRED_DEFINITIONS -D_LARGEFILE64_SOURCE=1)
+  check_type_size(off64_t OFF64_T)
+  if(HAVE_OFF64_T)
+    add_definitions(-D_LARGEFILE64_SOURCE=1)
   endif()
-else()
-  # not needed on windows
-  set(M_LIBRARY "")
-endif()
+  set(CMAKE_REQUIRED_DEFINITIONS) # clear variable
 
-set(PNG_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Dependencies/png)
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
+  #
+  # Check for fseeko
+  #
+  check_function_exists(fseeko HAVE_FSEEKO)
+  if(NOT HAVE_FSEEKO)
+    add_definitions(-DNO_FSEEKO)
+  endif()
 
-# OUR SOURCES
-set(libpng_public_hdrs
-  ${PNG_SOURCE_DIR}/png.h
-  ${PNG_SOURCE_DIR}/pngconf.h
-  ${PNG_SOURCE_DIR}/pnglibconf.h
-)
-set(libpng_sources
-  ${libpng_public_hdrs}
-  ${PNG_SOURCE_DIR}/pngdebug.h
-  ${PNG_SOURCE_DIR}/pnginfo.h
-  ${PNG_SOURCE_DIR}/pngpriv.h
-  ${PNG_SOURCE_DIR}/pngstruct.h
-  ${PNG_SOURCE_DIR}/png.c
-  ${PNG_SOURCE_DIR}/pngerror.c
-  ${PNG_SOURCE_DIR}/pngget.c
-  ${PNG_SOURCE_DIR}/pngmem.c
-  ${PNG_SOURCE_DIR}/pngpread.c
-  ${PNG_SOURCE_DIR}/pngread.c
-  ${PNG_SOURCE_DIR}/pngrio.c
-  ${PNG_SOURCE_DIR}/pngrtran.c
-  ${PNG_SOURCE_DIR}/pngrutil.c
-  ${PNG_SOURCE_DIR}/pngset.c
-  ${PNG_SOURCE_DIR}/pngtrans.c
-  ${PNG_SOURCE_DIR}/pngwio.c
-  ${PNG_SOURCE_DIR}/pngwrite.c
-  ${PNG_SOURCE_DIR}/pngwtran.c
-  ${PNG_SOURCE_DIR}/pngwutil.c
-)
-# SOME NEEDED DEFINITIONS
+  #
+  # Check for unistd.h
+  #
+  check_include_file(unistd.h Z_HAVE_UNISTD_H)
 
-if(MSVC)
-  add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
-endif()
+  if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+    add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE)
+  endif()
 
-set(ADDITIONAL_LIBRARIES ${ADDITIONAL_LIBRARIES} ${M_LIBRARY})
-include_directories(${PNG_SOURCE_DIR})
+  set(ZLIB_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Dependencies/zlib)
+  configure_file(${ZLIB_SOURCE_DIR}/zconf.h.cmakein
+                 ${CMAKE_CURRENT_BINARY_DIR}/zconf.h @ONLY)
+  include_directories(${CMAKE_CURRENT_BINARY_DIR})
+  include_directories(${ZLIB_SOURCE_DIR})
 
-#============================================================================
-# jpeg
-#============================================================================
 
-check_include_file(stdlib.h HAVE_STDLIB_H)
+  set(ZLIB_PUBLIC_HDRS
+    ${CMAKE_CURRENT_BINARY_DIR}/zconf.h
+    ${ZLIB_SOURCE_DIR}/zlib.h
+  )
+  set(ZLIB_PRIVATE_HDRS
+      ${ZLIB_SOURCE_DIR}/crc32.h
+      ${ZLIB_SOURCE_DIR}/deflate.h
+      ${ZLIB_SOURCE_DIR}/gzguts.h
+      ${ZLIB_SOURCE_DIR}/inffast.h
+      ${ZLIB_SOURCE_DIR}/inffixed.h
+      ${ZLIB_SOURCE_DIR}/inflate.h
+      ${ZLIB_SOURCE_DIR}/inftrees.h
+      ${ZLIB_SOURCE_DIR}/trees.h
+      ${ZLIB_SOURCE_DIR}/zutil.h
+  )
+  set(ZLIB_SRCS
+      ${ZLIB_SOURCE_DIR}/adler32.c
+      ${ZLIB_SOURCE_DIR}/compress.c
+      ${ZLIB_SOURCE_DIR}/crc32.c
+      ${ZLIB_SOURCE_DIR}/deflate.c
+      ${ZLIB_SOURCE_DIR}/gzclose.c
+      ${ZLIB_SOURCE_DIR}/gzlib.c
+      ${ZLIB_SOURCE_DIR}/gzread.c
+      ${ZLIB_SOURCE_DIR}/gzwrite.c
+      ${ZLIB_SOURCE_DIR}/inflate.c
+      ${ZLIB_SOURCE_DIR}/infback.c
+      ${ZLIB_SOURCE_DIR}/inftrees.c
+      ${ZLIB_SOURCE_DIR}/inffast.c
+      ${ZLIB_SOURCE_DIR}/trees.c
+      ${ZLIB_SOURCE_DIR}/uncompr.c
+      ${ZLIB_SOURCE_DIR}/zutil.c
+  )
 
-set(JPEG_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Dependencies/jpeg)
-configure_file(${JPEG_SOURCE_DIR}/jconfig.h.cmake
-               ${CMAKE_CURRENT_BINARY_DIR}/jconfig.h)
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories(${JPEG_SOURCE_DIR})
+  #============================================================================
+  # png
+  #============================================================================
 
-if(MSVC)
+  if(NOT WIN32)
+    find_library(M_LIBRARY
+      NAMES m
+      PATHS /usr/lib /usr/local/lib
+    )
+    if(NOT M_LIBRARY)
+      message(STATUS
+        "math library 'libm' not found - floating point support disabled")
+    endif()
+  else()
+    # not needed on windows
+    set(M_LIBRARY "")
+  endif()
+
+  set(PNG_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Dependencies/png)
+  include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+  # OUR SOURCES
+  set(libpng_public_hdrs
+      ${PNG_SOURCE_DIR}/png.h
+      ${PNG_SOURCE_DIR}/pngconf.h
+      ${PNG_SOURCE_DIR}/pnglibconf.h
+  )
+  set(libpng_sources
+      ${libpng_public_hdrs}
+      ${PNG_SOURCE_DIR}/pngdebug.h
+      ${PNG_SOURCE_DIR}/pnginfo.h
+      ${PNG_SOURCE_DIR}/pngpriv.h
+      ${PNG_SOURCE_DIR}/pngstruct.h
+      ${PNG_SOURCE_DIR}/png.c
+      ${PNG_SOURCE_DIR}/pngerror.c
+      ${PNG_SOURCE_DIR}/pngget.c
+      ${PNG_SOURCE_DIR}/pngmem.c
+      ${PNG_SOURCE_DIR}/pngpread.c
+      ${PNG_SOURCE_DIR}/pngread.c
+      ${PNG_SOURCE_DIR}/pngrio.c
+      ${PNG_SOURCE_DIR}/pngrtran.c
+      ${PNG_SOURCE_DIR}/pngrutil.c
+      ${PNG_SOURCE_DIR}/pngset.c
+      ${PNG_SOURCE_DIR}/pngtrans.c
+      ${PNG_SOURCE_DIR}/pngwio.c
+      ${PNG_SOURCE_DIR}/pngwrite.c
+      ${PNG_SOURCE_DIR}/pngwtran.c
+      ${PNG_SOURCE_DIR}/pngwutil.c
+  )
+  # SOME NEEDED DEFINITIONS
+
+  if(MSVC)
+    add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+  endif()
+
+  set(ADDITIONAL_LIBRARIES ${ADDITIONAL_LIBRARIES} ${M_LIBRARY})
+  include_directories(${PNG_SOURCE_DIR})
+
+  #============================================================================
+  # jpeg
+  #============================================================================
+
+  check_include_file(stdlib.h HAVE_STDLIB_H)
+
+  set(JPEG_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Dependencies/jpeg)
+  configure_file(${JPEG_SOURCE_DIR}/jconfig.h.cmake
+                 ${CMAKE_CURRENT_BINARY_DIR}/jconfig.h)
+  include_directories(${CMAKE_CURRENT_BINARY_DIR})
+  include_directories(${JPEG_SOURCE_DIR})
+
+  if(MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-endif()
+  endif()
 
-set(JPEG_PUBLIC_HDRS
-    ${JPEG_SOURCE_DIR}/jerror.h
-    ${JPEG_SOURCE_DIR}/jmorecfg.h
-    ${JPEG_SOURCE_DIR}/jpeglib.h
-    ${CMAKE_CURRENT_BINARY_DIR}/jconfig.h
-)
-set(JPEG_PRIVATE_HDRS
-    ${JPEG_SOURCE_DIR}/cderror.h
-    ${JPEG_SOURCE_DIR}/jdct.h
-    ${JPEG_SOURCE_DIR}/jinclude.h
-    ${JPEG_SOURCE_DIR}/jmemsys.h
-    ${JPEG_SOURCE_DIR}/jpegint.h
-    ${JPEG_SOURCE_DIR}/jversion.h
-    ${JPEG_SOURCE_DIR}/transupp.h
-)
+  set(JPEG_PUBLIC_HDRS
+      ${JPEG_SOURCE_DIR}/jerror.h
+      ${JPEG_SOURCE_DIR}/jmorecfg.h
+      ${JPEG_SOURCE_DIR}/jpeglib.h
+      ${CMAKE_CURRENT_BINARY_DIR}/jconfig.h
+  )
+  set(JPEG_PRIVATE_HDRS
+      ${JPEG_SOURCE_DIR}/cderror.h
+      ${JPEG_SOURCE_DIR}/jdct.h
+      ${JPEG_SOURCE_DIR}/jinclude.h
+      ${JPEG_SOURCE_DIR}/jmemsys.h
+      ${JPEG_SOURCE_DIR}/jpegint.h
+      ${JPEG_SOURCE_DIR}/jversion.h
+      ${JPEG_SOURCE_DIR}/transupp.h
+  )
 
-# memmgr back ends: compile only one of these into a working library
-# (For now, let's use the mode that requires the image fit into memory.
-# This is the recommended mode for Win32 anyway.)
-set(JPEG_systemdependent_SRCS ${JPEG_SOURCE_DIR}/jmemnobs.c)
+  # memmgr back ends: compile only one of these into a working library
+  # (For now, let's use the mode that requires the image fit into memory.
+  # This is the recommended mode for Win32 anyway.)
+  set(JPEG_systemdependent_SRCS ${JPEG_SOURCE_DIR}/jmemnobs.c)
 
-set(JPEG_SRCS
-    ${JPEG_SOURCE_DIR}/jaricom.c
-    ${JPEG_SOURCE_DIR}/jcapimin.c
-    ${JPEG_SOURCE_DIR}/jcapistd.c
-    ${JPEG_SOURCE_DIR}/jcarith.c
-    ${JPEG_SOURCE_DIR}/jccoefct.c
-    ${JPEG_SOURCE_DIR}/jccolor.c
-    ${JPEG_SOURCE_DIR}/jcdctmgr.c
-    ${JPEG_SOURCE_DIR}/jchuff.c
-    ${JPEG_SOURCE_DIR}/jcinit.c
-    ${JPEG_SOURCE_DIR}/jcmainct.c
-    ${JPEG_SOURCE_DIR}/jcmarker.c
-    ${JPEG_SOURCE_DIR}/jcmaster.c
-    ${JPEG_SOURCE_DIR}/jcomapi.c
-    ${JPEG_SOURCE_DIR}/jcparam.c
-    ${JPEG_SOURCE_DIR}/jcprepct.c
-    ${JPEG_SOURCE_DIR}/jcsample.c
-    ${JPEG_SOURCE_DIR}/jctrans.c
-    ${JPEG_SOURCE_DIR}/jdapimin.c
-    ${JPEG_SOURCE_DIR}/jdapistd.c
-    ${JPEG_SOURCE_DIR}/jdarith.c
-    ${JPEG_SOURCE_DIR}/jdatadst.c
-    ${JPEG_SOURCE_DIR}/jdatasrc.c
-    ${JPEG_SOURCE_DIR}/jdcoefct.c
-    ${JPEG_SOURCE_DIR}/jdcolor.c
-    ${JPEG_SOURCE_DIR}/jddctmgr.c
-    ${JPEG_SOURCE_DIR}/jdhuff.c
-    ${JPEG_SOURCE_DIR}/jdinput.c
-    ${JPEG_SOURCE_DIR}/jdmainct.c
-    ${JPEG_SOURCE_DIR}/jdmarker.c
-    ${JPEG_SOURCE_DIR}/jdmaster.c
-    ${JPEG_SOURCE_DIR}/jdmerge.c
-    ${JPEG_SOURCE_DIR}/jdpostct.c
-    ${JPEG_SOURCE_DIR}/jdsample.c
-    ${JPEG_SOURCE_DIR}/jdtrans.c
-    ${JPEG_SOURCE_DIR}/jerror.c
-    ${JPEG_SOURCE_DIR}/jfdctflt.c
-    ${JPEG_SOURCE_DIR}/jfdctfst.c
-    ${JPEG_SOURCE_DIR}/jfdctint.c
-    ${JPEG_SOURCE_DIR}/jidctflt.c
-    ${JPEG_SOURCE_DIR}/jidctfst.c
-    ${JPEG_SOURCE_DIR}/jidctint.c
-    ${JPEG_SOURCE_DIR}/jquant1.c
-    ${JPEG_SOURCE_DIR}/jquant2.c
-    ${JPEG_SOURCE_DIR}/jutils.c
-    ${JPEG_SOURCE_DIR}/jmemmgr.c)
+  set(JPEG_SRCS
+      ${JPEG_SOURCE_DIR}/jaricom.c
+      ${JPEG_SOURCE_DIR}/jcapimin.c
+      ${JPEG_SOURCE_DIR}/jcapistd.c
+      ${JPEG_SOURCE_DIR}/jcarith.c
+      ${JPEG_SOURCE_DIR}/jccoefct.c
+      ${JPEG_SOURCE_DIR}/jccolor.c
+      ${JPEG_SOURCE_DIR}/jcdctmgr.c
+      ${JPEG_SOURCE_DIR}/jchuff.c
+      ${JPEG_SOURCE_DIR}/jcinit.c
+      ${JPEG_SOURCE_DIR}/jcmainct.c
+      ${JPEG_SOURCE_DIR}/jcmarker.c
+      ${JPEG_SOURCE_DIR}/jcmaster.c
+      ${JPEG_SOURCE_DIR}/jcomapi.c
+      ${JPEG_SOURCE_DIR}/jcparam.c
+      ${JPEG_SOURCE_DIR}/jcprepct.c
+      ${JPEG_SOURCE_DIR}/jcsample.c
+      ${JPEG_SOURCE_DIR}/jctrans.c
+      ${JPEG_SOURCE_DIR}/jdapimin.c
+      ${JPEG_SOURCE_DIR}/jdapistd.c
+      ${JPEG_SOURCE_DIR}/jdarith.c
+      ${JPEG_SOURCE_DIR}/jdatadst.c
+      ${JPEG_SOURCE_DIR}/jdatasrc.c
+      ${JPEG_SOURCE_DIR}/jdcoefct.c
+      ${JPEG_SOURCE_DIR}/jdcolor.c
+      ${JPEG_SOURCE_DIR}/jddctmgr.c
+      ${JPEG_SOURCE_DIR}/jdhuff.c
+      ${JPEG_SOURCE_DIR}/jdinput.c
+      ${JPEG_SOURCE_DIR}/jdmainct.c
+      ${JPEG_SOURCE_DIR}/jdmarker.c
+      ${JPEG_SOURCE_DIR}/jdmaster.c
+      ${JPEG_SOURCE_DIR}/jdmerge.c
+      ${JPEG_SOURCE_DIR}/jdpostct.c
+      ${JPEG_SOURCE_DIR}/jdsample.c
+      ${JPEG_SOURCE_DIR}/jdtrans.c
+      ${JPEG_SOURCE_DIR}/jerror.c
+      ${JPEG_SOURCE_DIR}/jfdctflt.c
+      ${JPEG_SOURCE_DIR}/jfdctfst.c
+      ${JPEG_SOURCE_DIR}/jfdctint.c
+      ${JPEG_SOURCE_DIR}/jidctflt.c
+      ${JPEG_SOURCE_DIR}/jidctfst.c
+      ${JPEG_SOURCE_DIR}/jidctint.c
+      ${JPEG_SOURCE_DIR}/jquant1.c
+      ${JPEG_SOURCE_DIR}/jquant2.c
+      ${JPEG_SOURCE_DIR}/jutils.c
+      ${JPEG_SOURCE_DIR}/jmemmgr.c)
 
-set(DEPENDENCIES_SRCS ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS} ${libpng_sources} ${JPEG_systemdependent_SRCS} ${JPEG_SRCS} ${JPEG_PUBLIC_HDRS} ${JPEG_PRIVATE_HDRS})
-set_property( SOURCE
+  set(DEPENDENCIES_SRCS ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS} ${libpng_sources} ${JPEG_systemdependent_SRCS} ${JPEG_SRCS} ${JPEG_PUBLIC_HDRS} ${JPEG_PRIVATE_HDRS})
+  set_property( SOURCE
     RTL/Platform/${U3D_PLATFORM}/Common/IFXOSLoader.cpp
     PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="Plugins" U3DCorePath="." )
-if(STDIO_HACK)
-set_property( SOURCE
-    RTL/Component/Exporting/CIFXStdioWriteBufferX.cpp
-    IDTF/ConverterDriver.cpp
-    IDTF/File.cpp
-    PROPERTY COMPILE_DEFINITIONS STDIO_HACK )
-set_property( SOURCE
-    RTL/Platform/${U3D_PLATFORM}/Common/IFXOSLoader.cpp
-    PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="Plugins" U3DCorePath="." STDIO_HACK )
-endif()
+  if(STDIO_HACK)
+    set_property( SOURCE
+      RTL/Component/Exporting/CIFXStdioWriteBufferX.cpp
+      IDTF/ConverterDriver.cpp
+      IDTF/File.cpp
+      PROPERTY COMPILE_DEFINITIONS STDIO_HACK )
+    set_property( SOURCE
+      RTL/Platform/${U3D_PLATFORM}/Common/IFXOSLoader.cpp
+      PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="Plugins" U3DCorePath="." STDIO_HACK )
+  endif()
 
 endif()
 
@@ -621,7 +623,7 @@ set( Platform_HDRS
 # IFXCoreStatic
 include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
     RTL/Component/Base
-        RTL/Component/Rendering
+    RTL/Component/Rendering
     RTL/Dependencies/WildCards )
 
 set( IFXCoreStatic_HDRS
@@ -697,9 +699,9 @@ set( IFXCoreStatic_SRCS
 )
 add_library( IFXCoreStatic STATIC ${IFXCoreStatic_SRCS} ${IFXCoreStatic_HDRS} )
 install(
-    TARGETS IFXCoreStatic
-    ARCHIVE DESTINATION ${LIB_DESTINATION} COMPONENT Development
-    LIBRARY DESTINATION ${LIB_DESTINATION} COMPONENT Runtime
+  TARGETS IFXCoreStatic
+  ARCHIVE DESTINATION ${LIB_DESTINATION} COMPONENT Development
+  LIBRARY DESTINATION ${LIB_DESTINATION} COMPONENT Runtime
 )
 
 # Something Windows-only
@@ -716,30 +718,30 @@ install(
 
 # IFXCore
 include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
-    RTL/Component/Base
-    RTL/Component/BitStream
-    RTL/Component/Bones
-    RTL/Component/BoundHierarchy
-    RTL/Component/CLODAuthor
-    RTL/Component/Common
-    RTL/Component/Generators/CLOD
-    RTL/Component/Generators/Glyph2D
-    RTL/Component/Generators/LineSet
-    RTL/Component/Generators/PointSet
-    RTL/Component/Mesh
-    RTL/Component/ModifierChain
-    RTL/Component/Palette
-    RTL/Component/Rendering
-    RTL/Component/SceneGraph
-    RTL/Component/Shaders
-    RTL/Component/Subdiv
-    RTL/Component/Texture
-    RTL/Component/UVGenerator
-    RTL/Kernel/IFXCom
-    RTL/Kernel/Common
-    RTL/Dependencies/FNVHash
-    RTL/Dependencies/Predicates
-    RTL/Dependencies/WildCards
+  RTL/Component/Base
+  RTL/Component/BitStream
+  RTL/Component/Bones
+  RTL/Component/BoundHierarchy
+  RTL/Component/CLODAuthor
+  RTL/Component/Common
+  RTL/Component/Generators/CLOD
+  RTL/Component/Generators/Glyph2D
+  RTL/Component/Generators/LineSet
+  RTL/Component/Generators/PointSet
+  RTL/Component/Mesh
+  RTL/Component/ModifierChain
+  RTL/Component/Palette
+  RTL/Component/Rendering
+  RTL/Component/SceneGraph
+  RTL/Component/Shaders
+  RTL/Component/Subdiv
+  RTL/Component/Texture
+  RTL/Component/UVGenerator
+  RTL/Kernel/IFXCom
+  RTL/Kernel/Common
+  RTL/Dependencies/FNVHash
+  RTL/Dependencies/Predicates
+  RTL/Dependencies/WildCards
 )
 
 set( IFXCore_SRCS
@@ -1167,16 +1169,16 @@ if(UNIX AND NOT APPLE)
 endif()
 target_link_libraries( IFXCore ${ADDITIONAL_LIBRARIES} )
 install(
-    TARGETS IFXCore
-    RUNTIME DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
-    ARCHIVE DESTINATION ${LIB_DESTINATION} COMPONENT Development
-    LIBRARY DESTINATION ${LIB_DESTINATION} COMPONENT Runtime
+  TARGETS IFXCore
+  RUNTIME DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
+  ARCHIVE DESTINATION ${LIB_DESTINATION} COMPONENT Development
+  LIBRARY DESTINATION ${LIB_DESTINATION} COMPONENT Runtime
 )
 
 
 include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
-    RTL/Component/Exporting
-    RTL/Dependencies/WildCards )
+  RTL/Component/Exporting
+  RTL/Dependencies/WildCards )
 set( IFXExporting_HDRS
     ${Component_HDRS}
     ${Kernel_HDRS}
@@ -1274,15 +1276,15 @@ if(UNIX AND NOT APPLE)
     LINK_FLAGS "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Lin32/IFXExporting/IFXExporting.list" )
 endif()
 install(
-    TARGETS IFXExporting
-    RUNTIME DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
-    ARCHIVE DESTINATION ${LIB_DESTINATION} COMPONENT Development
-    LIBRARY DESTINATION ${PLUGIN_DESTINATION} COMPONENT Runtime
+  TARGETS IFXExporting
+  RUNTIME DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
+  ARCHIVE DESTINATION ${LIB_DESTINATION} COMPONENT Development
+  LIBRARY DESTINATION ${PLUGIN_DESTINATION} COMPONENT Runtime
 )
 
 include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
-    RTL/Component/Importing
-    RTL/Dependencies/WildCards )
+  RTL/Component/Importing
+  RTL/Dependencies/WildCards )
 set( IFXImporting_HDRS
     ${Component_HDRS}
     ${Kernel_HDRS}
@@ -1372,7 +1374,7 @@ set( IFXImporting_SRCS
     RTL/Kernel/DataTypes/IFXVector4.cpp
     RTL/Dependencies/WildCards/wcmatch.cpp
     RTL/Kernel/Common/IFXDebug.cpp
-    )
+)
 if(WIN32)
   set( IMPORT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Win32/IFXImporting )
   add_library( IFXImporting  SHARED ${IFXImporting_SRCS} ${IFXImporting_HDRS} ${IMPORT_DIR}/IFXImporting.rc ${IMPORT_DIR}/IFXResource.h ${IMPORT_DIR}/IFXImporting.def )
@@ -1389,17 +1391,17 @@ if(UNIX AND NOT APPLE)
     LINK_FLAGS "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Lin32/IFXImporting/IFXImporting.list" )
 endif()
 install(
-    TARGETS IFXImporting
-    RUNTIME DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
-    ARCHIVE DESTINATION ${LIB_DESTINATION} COMPONENT Development
-    LIBRARY DESTINATION ${PLUGIN_DESTINATION} COMPONENT Runtime
+  TARGETS IFXImporting
+  RUNTIME DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
+  ARCHIVE DESTINATION ${LIB_DESTINATION} COMPONENT Development
+  LIBRARY DESTINATION ${PLUGIN_DESTINATION} COMPONENT Runtime
 )
 
 include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
-    RTL/Component/ModifierChain
-    RTL/Component/SceneGraph
-    RTL/Component/Scheduling
-    RTL/Dependencies/WildCards )
+  RTL/Component/ModifierChain
+  RTL/Component/SceneGraph
+  RTL/Component/Scheduling
+  RTL/Dependencies/WildCards )
 set( IFXScheduling_HDRS
     ${Component_HDRS}
     ${Kernel_HDRS}
@@ -1491,7 +1493,7 @@ set( IFXScheduling_SRCS
     RTL/Kernel/DataTypes/IFXVector4.cpp
     RTL/Dependencies/WildCards/wcmatch.cpp
     RTL/Kernel/Common/IFXDebug.cpp
-    )
+)
 if(WIN32)
   set( SCHED_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Win32/IFXScheduling )
   add_library( IFXScheduling  SHARED ${IFXScheduling_SRCS} ${IFXScheduling_HDRS} ${SCHED_DIR}/IFXScheduling.rc ${SCHED_DIR}/IFXResource.h ${SCHED_DIR}/IFXScheduling.def )
@@ -1508,16 +1510,16 @@ if(UNIX AND NOT APPLE)
     LINK_FLAGS "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Lin32/IFXScheduling/IFXScheduling.list" )
 endif()
 install(
-    TARGETS IFXScheduling
-    RUNTIME DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
-    ARCHIVE DESTINATION ${LIB_DESTINATION} COMPONENT Development
-    LIBRARY DESTINATION ${PLUGIN_DESTINATION} COMPONENT Runtime
+  TARGETS IFXScheduling
+  RUNTIME DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
+  ARCHIVE DESTINATION ${LIB_DESTINATION} COMPONENT Development
+  LIBRARY DESTINATION ${PLUGIN_DESTINATION} COMPONENT Runtime
 )
 
 include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
-    IDTF
-    IDTF/Include
-    IDTF/Common )
+  IDTF
+  IDTF/Include
+  IDTF/Common )
 set( IDTFConverter_SRCS
     IDTF/FileParser.cpp
     IDTF/SceneConverter.cpp
@@ -1662,33 +1664,34 @@ set( IDTFConverter_HDRS
     IDTF/Common/ViewResource.h
     IDTF/Common/ViewResourceList.h
 )
+
 if(U3D_BUILD_IDTFConverter)
-if(WIN32)
-  add_executable( IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS} IDTF/IDTFConverter.rc IDTF/IFXResource.h )
-endif()
-if(APPLE)
-  add_executable( IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS} )
+  if(WIN32)
+    add_executable( IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS} IDTF/IDTFConverter.rc IDTF/IFXResource.h )
+  endif()
+  if(APPLE)
+    add_executable( IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS} )
     set_target_properties( IDTFConverter  PROPERTIES
-    LINK_FLAGS "${MY_LINK_FLAGS} -exported_symbols_list /dev/null" )
-endif()
-if(UNIX AND NOT APPLE)
-  add_executable( IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS} )
-endif()
-target_link_libraries( IDTFConverter  IFXCoreStatic ${CMAKE_DL_LIBS} )
-add_dependencies( IDTFConverter  IFXCoreStatic )
-install(
+      LINK_FLAGS "${MY_LINK_FLAGS} -exported_symbols_list /dev/null" )
+  endif()
+  if(UNIX AND NOT APPLE)
+    add_executable( IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS} )
+  endif()
+  target_link_libraries( IDTFConverter  IFXCoreStatic ${CMAKE_DL_LIBS} )
+  add_dependencies( IDTFConverter  IFXCoreStatic )
+  install(
     TARGETS IDTFConverter
     DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
-)
+  )
 endif()
 
 include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
-    RTL/Dependencies/WildCards
-    RTL/Component/Base
-    IDTF
-    IDTF/Include
-    IDTF/Common
-        libIDTF )
+  RTL/Dependencies/WildCards
+  RTL/Component/Base
+  IDTF
+  IDTF/Include
+  IDTF/Common
+  libIDTF )
 set( libIDTF_SRCS
     libIDTF/SceneConverterLib.cpp
     libIDTF/Writer.cpp
@@ -1827,69 +1830,69 @@ set( libIDTF_HDRS
     RTL/Component/Base/IFXVectorHasher.h
 )
 if( U3D_SHARED )
-set_property( SOURCE
+  set_property( SOURCE
     libIDTF/IFXOSLoader.cpp
     PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="." U3DCorePath="${CMAKE_INSTALL_PREFIX}/${LIB_DESTINATION}" )
 else()
-set_property( SOURCE
+  set_property( SOURCE
     libIDTF/IFXOSLoader.cpp
     PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="Plugins" U3DCorePath="." )
 endif()
 if(MSVC)
-add_library( IDTF STATIC ${libIDTF_SRCS} ${libIDTF_HDRS} )
+  add_library( IDTF STATIC ${libIDTF_SRCS} ${libIDTF_HDRS} )
 else()
-add_library( IDTF SHARED ${libIDTF_SRCS} ${libIDTF_HDRS} )
+  add_library( IDTF SHARED ${libIDTF_SRCS} ${libIDTF_HDRS} )
 endif()
 set_property(
-    TARGET IDTF
-    PROPERTY COMPILE_DEFINITIONS LIBIDTF )
+  TARGET IDTF
+  PROPERTY COMPILE_DEFINITIONS LIBIDTF )
 install(
-    TARGETS IDTF
-    ARCHIVE DESTINATION ${LIB_DESTINATION} COMPONENT Development
-    LIBRARY DESTINATION ${LIB_DESTINATION} COMPONENT Runtime
+  TARGETS IDTF
+  ARCHIVE DESTINATION ${LIB_DESTINATION} COMPONENT Development
+  LIBRARY DESTINATION ${LIB_DESTINATION} COMPONENT Runtime
 )
 
 if(U3D_BUILD_SAMPLES)
-add_executable( IDTFGen Samples/SampleCode/IDTFGen.cpp ${libIDTF_HDRS} )
-target_link_libraries( IDTFGen  IDTF ${CMAKE_DL_LIBS} )
-add_dependencies( IDTFGen  IDTF )
+  add_executable( IDTFGen Samples/SampleCode/IDTFGen.cpp ${libIDTF_HDRS} )
+  target_link_libraries( IDTFGen  IDTF ${CMAKE_DL_LIBS} )
+  add_dependencies( IDTFGen  IDTF )
 
-install(
+  install(
     TARGETS IDTFGen
     DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
-)
+  )
 endif()
 
 
 #include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include )
 if(U3D_BUILD_SAMPLES)
-add_executable( HelloU3DWorld
+  add_executable( HelloU3DWorld
     Samples/SampleCode/HelloWorld.cpp
     ${Component_HDRS} ${Kernel_HDRS} ${Platform_HDRS} )
-target_link_libraries( HelloU3DWorld  IFXCoreStatic ${CMAKE_DL_LIBS} )
-add_dependencies( HelloU3DWorld  IFXCoreStatic )
+  target_link_libraries( HelloU3DWorld  IFXCoreStatic ${CMAKE_DL_LIBS} )
+  add_dependencies( HelloU3DWorld  IFXCoreStatic )
 
-install(
+  install(
     TARGETS HelloU3DWorld
     DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
-)
+  )
 endif()
 
 install( DIRECTORY RTL/Component/Include/ RTL/Kernel/Include/ RTL/Platform/Include/
-    DESTINATION ${INCLUDE_DESTINATION}
-    COMPONENT Development
-    FILES_MATCHING PATTERN "*.h"
+  DESTINATION ${INCLUDE_DESTINATION}
+  COMPONENT Development
+  FILES_MATCHING PATTERN "*.h"
 )
 install( FILES RTL/Platform/${U3D_PLATFORM}/IFXRendering/OpenGL/IFXOpenGLOS.h
-    DESTINATION ${INCLUDE_DESTINATION}
-    COMPONENT Development
+  DESTINATION ${INCLUDE_DESTINATION}
+  COMPONENT Development
 )
 install( FILES ${libIDTF_HDRS}
-    DESTINATION ${INCLUDE_DESTINATION}
-    COMPONENT Development
+  DESTINATION ${INCLUDE_DESTINATION}
+  COMPONENT Development
 )
 if(U3D_BUILD_SAMPLES)
-install( FILES
+  install( FILES
     Samples/SampleCode/HelloWorld.cpp
     Samples/SampleCode/IDTFGen.cpp
     Samples/SampleCode/Makefile.sample
@@ -1899,23 +1902,23 @@ install( FILES
     Samples/SampleCode/vtkU3DExporterTest.cxx
     DESTINATION ${SAMPLE_DESTINATION}/SampleCode
     COMPONENT Development
-)
-install( DIRECTORY Samples/TestScenes
+  )
+  install( DIRECTORY Samples/TestScenes
     DESTINATION ${SAMPLE_DESTINATION}
     COMPONENT Development
     PATTERN "Makef*" EXCLUDE
-)
+  )
 endif()
 install( DIRECTORY Docs/
-    DESTINATION ${DOC_DESTINATION}
-    PATTERN "Makef*" EXCLUDE
+  DESTINATION ${DOC_DESTINATION}
+  PATTERN "Makef*" EXCLUDE
 )
 
 # uninstall target
 configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-    IMMEDIATE @ONLY)
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+  IMMEDIATE @ONLY)
 
 add_custom_target(uninstall
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
