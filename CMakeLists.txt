@@ -12,14 +12,15 @@ option(U3D_BUILD_SAMPLES "Build HelloU3DWorld and IDTFGen" ON)
 # there were real problems with cpuid on Ubuntu 13.04 i386
 add_definitions(-DU3D_NO_ASM)
 
-# add debug definitions
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-  add_definitions(-D_DEBUG -DDEBUG)
-  message(STATUS "DEBUG BUILD")
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
-else()
-  message(STATUS "RELEASE BUILD")
-  add_definitions(-DNDEBUG)
+# Set a default build type if none was specified
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" )
+endif()
+if(NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Configuring with build type '${CMAKE_BUILD_TYPE}'")
 endif()
 
 if(NOT MSVC)
