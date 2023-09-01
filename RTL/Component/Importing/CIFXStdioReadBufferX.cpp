@@ -53,7 +53,7 @@ IFXRESULT CIFXStdioReadBufferX::Read( U8* pBytes, U64 position, U32 count )
 		}
 	}
 
-	catch(IFXException e)
+	catch(IFXException& e)
 	{
 		rc = e.GetIFXResult();
 	}
@@ -111,7 +111,7 @@ IFXRESULT CIFXStdioReadBufferX::GetTotalSize( U64* pCount )
 		GetTotalSizeX(*pCount);
 	}
 
-	catch(IFXException e) {
+	catch(IFXException& e) {
 		rc = e.GetIFXResult();
 	}
 
@@ -156,7 +156,7 @@ IFXRESULT CIFXStdioReadBufferX::GetAvailableSize( U64* pCount )
 		GetAvailableSizeX(*pCount);
 	}
 
-	catch (IFXException e) {
+	catch (IFXException& e) {
 		rc = e.GetIFXResult();
 	}
 

@@ -200,7 +200,7 @@ void CIFXBitStreamX::WriteIFXStringX(IFXString& rString)
 			IFXDELETE_ARRAY(pValue);
 		}
 	}
-	catch(IFXException e)
+	catch(IFXException& e)
 	{
 		IFXDELETE_ARRAY(pValue);
 		throw e;
@@ -304,7 +304,7 @@ void CIFXBitStreamX::ReadIFXStringX(IFXString& rString)
 
 		IFXDELETE_ARRAY(pValue);
 	}
-	catch(IFXException e) 
+	catch(IFXException& e)
 	{
 		IFXDELETE_ARRAY(pValue);
 		throw e;
@@ -920,7 +920,7 @@ void CIFXBitStreamX::AllocateDataBuffer(U32 uSize)
 		IFXDELETE_ARRAY(puOldData);
 	}
 
-	catch(IFXException e)
+	catch(IFXException& e)
 	{
 		IFXDELETE_ARRAY(puOldData);
 		throw e ;

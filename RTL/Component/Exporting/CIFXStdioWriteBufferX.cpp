@@ -50,7 +50,7 @@ IFXRESULT CIFXStdioWriteBufferX::Write( U8* pBytes, U64 position, U32 count )
 		WriteX(pBytes,position,count);
 	}
 
-	catch(IFXException e)
+	catch(IFXException& e)
 	{
 		rc = e.GetIFXResult();
 	}

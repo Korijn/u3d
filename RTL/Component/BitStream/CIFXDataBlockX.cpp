@@ -60,7 +60,7 @@ IFXRESULT CIFXDataBlockX::SetSize( U32 count )
     SetSizeX(count);
   }
 
-  catch(IFXException e) {
+  catch(IFXException& e) {
     rc = e.GetIFXResult();
   }
 
@@ -103,7 +103,7 @@ IFXRESULT CIFXDataBlockX::GetSize( U32* pCount )
     GetSizeX(*pCount);
   }
 
-  catch(IFXException e) {
+  catch(IFXException& e) {
     rc = e.GetIFXResult();
   }
 
@@ -139,7 +139,7 @@ IFXRESULT CIFXDataBlockX::GetTotalSize( U64* pCount )
     GetTotalSizeX(*pCount);
   }
 
-  catch(IFXException e) {
+  catch(IFXException& e) {
     rc = e.GetIFXResult();
   }
 
@@ -174,7 +174,7 @@ IFXRESULT CIFXDataBlockX::GetAvailableSize( U64* pCount )
     GetAvailableSizeX(*pCount);
   }
 
-  catch(IFXException e) {
+  catch(IFXException& e) {
     rc = e.GetIFXResult();
   }
 
@@ -200,7 +200,7 @@ IFXRESULT CIFXDataBlockX::SetBlockType( U32 BlockType )
     SetBlockTypeX(BlockType);
   }
 
-  catch(IFXException e) {
+  catch(IFXException& e) {
     rc = e.GetIFXResult();
   }
 
@@ -234,7 +234,7 @@ IFXRESULT CIFXDataBlockX::GetBlockType( U32* pBlockType )
     GetBlockTypeX(*pBlockType);
   }
 
-  catch(IFXException e) {
+  catch(IFXException& e) {
     rc = e.GetIFXResult();
   }
 
@@ -267,7 +267,7 @@ IFXRESULT CIFXDataBlockX::GetPointer( U8** ppData )
     GetPointerX(*ppData);
   }
 
-  catch(IFXException e) {
+  catch(IFXException& e) {
     rc = e.GetIFXResult();
   }
 
@@ -295,7 +295,7 @@ IFXRESULT CIFXDataBlockX::Read( U8* pBytes, U64 position, U32 count )
     ReadX(pBytes,position,count,rc);
   }
 
-  catch(IFXException e) {
+  catch(IFXException& e) {
     rc = e.GetIFXResult();
   }
 
@@ -331,7 +331,7 @@ IFXRESULT CIFXDataBlockX::Write( U8* pBytes, U64 position, U32 count )
     WriteX( pBytes,position,count);
   }
 
-  catch(IFXException e) {
+  catch(IFXException& e) {
     rc = e.GetIFXResult();
   }
 

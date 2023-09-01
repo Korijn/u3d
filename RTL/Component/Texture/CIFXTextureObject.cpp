@@ -419,7 +419,7 @@ void CIFXTextureObject::SetPriority(
         m_bBlockQueueDirty = FALSE;
       }
 
-      catch (IFXException e) 
+      catch (IFXException& e)
 	  {
         ; // Catch any IFXException and do nothing with it
       }
@@ -1567,7 +1567,7 @@ IFXRESULT CIFXTextureObject::ConstructQueueFromImage(
 
 	}
 
-	catch (IFXException e) 
+	catch (IFXException& e)
 	{
 		iResult = e.GetIFXResult();
 	}

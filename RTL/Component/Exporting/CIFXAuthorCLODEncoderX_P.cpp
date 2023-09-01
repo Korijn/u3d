@@ -260,7 +260,7 @@ void CIFXAuthorCLODEncoderX::MakeAuthorCLODProgressiveGeometryBlocksX(IFXString 
 						// Free tally array
 						IFXDELETE_ARRAY(puSplitPositionCandidates);
 					}
-					catch (IFXException e) {
+					catch (IFXException& e) {
 						// Free tally array
 						IFXDELETE_ARRAY(puSplitPositionCandidates);
 						throw(e);
