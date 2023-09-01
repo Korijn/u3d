@@ -453,7 +453,7 @@ IFXRESULT CIFXAuthorGeomCompiler::Compile(IFXString& rName,
 					}
 				}
 			}
-			catch(IFXException e)
+			catch(IFXException& e)
 			{
 				result = e.GetIFXResult();
 			}
@@ -550,7 +550,7 @@ IFXRESULT CIFXAuthorGeomCompiler::Compile(IFXString& rName,
 									m_pParams->CompressParams.bExcludeNormals);
 				}
 			}
-			catch(IFXException e)
+			catch(IFXException& e)
 			{
 				result = e.GetIFXResult();
 			}
@@ -602,7 +602,7 @@ IFXRESULT CIFXAuthorGeomCompiler::Compile(IFXString& rName,
 			}
 
 		}
-		catch(IFXException e)
+		catch(IFXException& e)
 		{
 			result = e.GetIFXResult();
 		}

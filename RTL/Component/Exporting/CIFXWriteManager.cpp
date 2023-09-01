@@ -223,7 +223,7 @@ IFXRESULT CIFXWriteManager::Initialize( IFXCoreServices *pCoreServices )
 		IFXCHECKX( m_pCoreServices->GetSceneGraph( IID_IFXSceneGraph, (void**) &m_pScenegraph ) );
 	}
 
-	catch ( IFXException e )
+	catch ( IFXException& e )
 	{
 		rc = e.GetIFXResult();
 	}
@@ -313,7 +313,7 @@ IFXRESULT CIFXWriteManager::Write( IFXWriteBuffer* pWriteBuffer, IFXExportOption
 		IFXRELEASE( m_pPriorityQueue );
 		IFXRELEASE( m_pBlockWriter );
 	}
-	catch(IFXException e)
+	catch(IFXException& e)
 	{
 		rc = e.GetIFXResult();
 
@@ -369,7 +369,7 @@ IFXRESULT CIFXWriteManager::SetQualityFactor( U32       uQualityFactor,
 			SetQualityOnPalette( uQualityFactor, IFXSceneGraph::TEXTURE );
 		}
 	}
-	catch ( IFXException e )
+	catch ( IFXException& e )
 	{
 		rc = e.GetIFXResult();
 	}
