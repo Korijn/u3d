@@ -10,66 +10,66 @@ option(U3D_BUILD_SAMPLES "Build HelloU3DWorld and IDTFGen" ON)
 
 # I do not want to support asm code, so disable it
 # there were real problems with cpuid on Ubuntu 13.04 i386
-add_definitions( -DU3D_NO_ASM )
+add_definitions(-DU3D_NO_ASM)
 
-if( CMAKE_GENERATOR STREQUAL "Unix Makefiles" )
-set(CMAKE_VERBOSE_MAKEFILE ON)
+if(CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+  set(CMAKE_VERBOSE_MAKEFILE ON)
 endif()
 
 # add debug definitions
-if( CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" )
-  add_definitions( -D_DEBUG -DDEBUG )
-  message( STATUS "DEBUG BUILD" )
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+  add_definitions(-D_DEBUG -DDEBUG)
+  message(STATUS "DEBUG BUILD")
   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 else()
-  message( STATUS "RELEASE BUILD" )
-  add_definitions( -DNDEBUG )
+  message(STATUS "RELEASE BUILD")
+  add_definitions(-DNDEBUG)
 endif()
 
-if( NOT MSVC )
+if(NOT MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 endif()
 
 if(APPLE)
-  add_definitions( -DMAC32 -fno-strict-aliasing )
-  set( U3D_PLATFORM Mac32 )
+  add_definitions(-DMAC32 -fno-strict-aliasing)
+  set(U3D_PLATFORM Mac32)
 endif()
 
 if(WIN32)
-  add_definitions( -DUNICODE -D_UNICODE -D_CRT_SECURE_NO_DEPRECATE )
-  set( U3D_PLATFORM Win32 )
-  link_libraries( winmm )
-  unset( CMAKE_SHARED_LIBRARY_PREFIX )
-  unset( CMAKE_SHARED_MODULE_PREFIX )
-  unset( CMAKE_STATIC_LIBRARY_PREFIX )
-  unset( CMAKE_IMPORT_LIBRARY_PREFIX )
+  add_definitions(-DUNICODE -D_UNICODE -D_CRT_SECURE_NO_DEPRECATE)
+  set(U3D_PLATFORM Win32)
+  link_libraries(winmm)
+  unset(CMAKE_SHARED_LIBRARY_PREFIX)
+  unset(CMAKE_SHARED_MODULE_PREFIX)
+  unset(CMAKE_STATIC_LIBRARY_PREFIX)
+  unset(CMAKE_IMPORT_LIBRARY_PREFIX)
 endif()
 
 if(UNIX AND NOT APPLE)
-  add_definitions( -DLIN32 -fno-strict-aliasing )
-  set( U3D_PLATFORM Lin32 )
+  add_definitions(-DLIN32 -fno-strict-aliasing)
+  set(U3D_PLATFORM Lin32)
 endif()
 
-message(STATUS "U3D_SHARED: " ${U3D_SHARED} )
+message(STATUS "U3D_SHARED: " ${U3D_SHARED})
 
 if(U3D_SHARED)
   if(NOT LIB_DESTINATION)
-    set( LIB_DESTINATION lib )
+    set(LIB_DESTINATION lib)
   endif()
   if(NOT BIN_DESTINATION)
-    set( BIN_DESTINATION bin )
+    set(BIN_DESTINATION bin)
   endif()
   if(NOT INCLUDE_DESTINATION)
-    set( INCLUDE_DESTINATION include/u3d )
+    set(INCLUDE_DESTINATION include/u3d)
   endif()
   if(NOT PLUGIN_DESTINATION)
-    set( PLUGIN_DESTINATION lib )
+    set(PLUGIN_DESTINATION lib)
   endif()
   if(NOT SAMPLE_DESTINATION)
-    set( SAMPLE_DESTINATION share/u3d/samples )
+    set(SAMPLE_DESTINATION share/u3d/samples)
   endif()
   if(NOT DOC_DESTINATION)
-    set( DOC_DESTINATION share/u3d/docs )
+    set(DOC_DESTINATION share/u3d/docs)
   endif()
 
   # check zlib availibility
@@ -88,39 +88,42 @@ if(U3D_SHARED)
   include_directories(${JPEG_INCLUDE_DIR})
   set(ADDITIONAL_LIBRARIES ${ADDITIONAL_LIBRARIES} ${JPEG_LIBRARIES})
 
-  set_property( SOURCE
+  set_property(SOURCE
     RTL/Platform/${U3D_PLATFORM}/Common/IFXOSLoader.cpp
-    PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="." U3DCorePath="${CMAKE_INSTALL_PREFIX}/${LIB_DESTINATION}" )
+    PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="." U3DCorePath="${CMAKE_INSTALL_PREFIX}/${LIB_DESTINATION}"
+  )
 
   if(STDIO_HACK)
-    set_property( SOURCE
+    set_property(SOURCE
       RTL/Component/Exporting/CIFXStdioWriteBufferX.cpp
       IDTF/ConverterDriver.cpp
       IDTF/File.cpp
-      PROPERTY COMPILE_DEFINITIONS STDIO_HACK )
-    set_property( SOURCE
+      PROPERTY COMPILE_DEFINITIONS STDIO_HACK
+    )
+    set_property(SOURCE
       RTL/Platform/${U3D_PLATFORM}/Common/IFXOSLoader.cpp
-      PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="." U3DCorePath="${CMAKE_INSTALL_PREFIX}/${LIB_DESTINATION}" STDIO_HACK )
+      PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="." U3DCorePath="${CMAKE_INSTALL_PREFIX}/${LIB_DESTINATION}" STDIO_HACK
+    )
   endif()
 
 else()
   if(NOT DEFINED LIB_DESTINATION)
-    set( LIB_DESTINATION u3d )
+    set(LIB_DESTINATION u3d)
   endif()
   if(NOT DEFINED BIN_DESTINATION)
-    set( BIN_DESTINATION u3d )
+    set(BIN_DESTINATION u3d)
   endif()
   if(NOT DEFINED INCLUDE_DESTINATION)
-    set( INCLUDE_DESTINATION u3d/include )
+    set(INCLUDE_DESTINATION u3d/include)
   endif()
   if(NOT DEFINED PLUGIN_DESTINATION)
-    set( PLUGIN_DESTINATION u3d )
+    set(PLUGIN_DESTINATION u3d)
   endif()
   if(NOT DEFINED SAMPLE_DESTINATION)
-    set( SAMPLE_DESTINATION u3d/samples )
+    set(SAMPLE_DESTINATION u3d/samples)
   endif()
   if(NOT DEFINED DOC_DESTINATION)
-    set( DOC_DESTINATION u3d/docs )
+    set(DOC_DESTINATION u3d/docs)
   endif()
 
   #============================================================================
@@ -344,31 +347,38 @@ else()
       ${JPEG_SOURCE_DIR}/jquant1.c
       ${JPEG_SOURCE_DIR}/jquant2.c
       ${JPEG_SOURCE_DIR}/jutils.c
-      ${JPEG_SOURCE_DIR}/jmemmgr.c)
+      ${JPEG_SOURCE_DIR}/jmemmgr.c
+  )
 
   set(DEPENDENCIES_SRCS ${ZLIB_SRCS} ${ZLIB_PUBLIC_HDRS} ${ZLIB_PRIVATE_HDRS} ${libpng_sources} ${JPEG_systemdependent_SRCS} ${JPEG_SRCS} ${JPEG_PUBLIC_HDRS} ${JPEG_PRIVATE_HDRS})
-  set_property( SOURCE
+  set_property(SOURCE
     RTL/Platform/${U3D_PLATFORM}/Common/IFXOSLoader.cpp
-    PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="Plugins" U3DCorePath="." )
+    PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="Plugins" U3DCorePath="."
+  )
   if(STDIO_HACK)
-    set_property( SOURCE
+    set_property(SOURCE
       RTL/Component/Exporting/CIFXStdioWriteBufferX.cpp
       IDTF/ConverterDriver.cpp
       IDTF/File.cpp
-      PROPERTY COMPILE_DEFINITIONS STDIO_HACK )
-    set_property( SOURCE
+      PROPERTY COMPILE_DEFINITIONS STDIO_HACK
+    )
+    set_property(SOURCE
       RTL/Platform/${U3D_PLATFORM}/Common/IFXOSLoader.cpp
-      PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="Plugins" U3DCorePath="." STDIO_HACK )
+      PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="Plugins" U3DCorePath="." STDIO_HACK
+    )
   endif()
 
 endif()
 
-message( STATUS "CMAKE_INSTALL_PREFIX:         " ${CMAKE_INSTALL_PREFIX} )
-message( STATUS "LIB_DESTINATION:         " ${LIB_DESTINATION} )
+message(STATUS "CMAKE_INSTALL_PREFIX:         " ${CMAKE_INSTALL_PREFIX})
+message(STATUS "LIB_DESTINATION:         " ${LIB_DESTINATION})
 
-
-# include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
-set( Component_HDRS
+# include_directories(
+#   RTL/Component/Include
+#   RTL/Kernel/Include
+#   RTL/Platform/Include
+# )
+set(Component_HDRS
     RTL/Component/Include/CArrayList.h
     RTL/Component/Include/DX7asDX8.h
     RTL/Component/Include/IFXACContext.h
@@ -586,7 +596,7 @@ set( Component_HDRS
     RTL/Component/Include/IFXWriteManager.h
     RTL/Component/Include/InsertionSort.h
 )
-set( Kernel_HDRS
+set(Kernel_HDRS
     RTL/Kernel/Include/IFXAutoRelease.h
     RTL/Kernel/Include/IFXCheckX.h
     RTL/Kernel/Include/IFXCOM.h
@@ -611,7 +621,7 @@ set( Kernel_HDRS
     RTL/Kernel/Include/IFXVector4.h
     RTL/Kernel/Include/IFXVersion.h
 )
-set( Platform_HDRS
+set(Platform_HDRS
     RTL/Platform/Include/IFXAPI.h
     RTL/Platform/Include/IFXOSFileIterator.h
     RTL/Platform/Include/IFXOSLoader.h
@@ -621,12 +631,16 @@ set( Platform_HDRS
     RTL/Platform/Include/IFXRenderWindow.h
 )
 # IFXCoreStatic
-include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
-    RTL/Component/Base
-    RTL/Component/Rendering
-    RTL/Dependencies/WildCards )
+include_directories(
+  RTL/Component/Include
+  RTL/Kernel/Include
+  RTL/Platform/Include
+  RTL/Component/Base
+  RTL/Component/Rendering
+  RTL/Dependencies/WildCards
+)
 
-set( IFXCoreStatic_HDRS
+set(IFXCoreStatic_HDRS
     ${Component_HDRS}
     ${Kernel_HDRS}
     ${Platform_HDRS}
@@ -670,7 +684,7 @@ set( IFXCoreStatic_HDRS
     RTL/Component/Rendering/OpenGL/IFXRenderPCHOGL.h
     RTL/Dependencies/WildCards/wcmatch.h
 )
-set( IFXCoreStatic_SRCS
+set(IFXCoreStatic_SRCS
     RTL/IFXCoreStatic/IFXCoreStatic.cpp
     RTL/Platform/${U3D_PLATFORM}/Common/IFXOSUtilities.cpp
     RTL/Platform/${U3D_PLATFORM}/Common/IFXOSLoader.cpp
@@ -697,7 +711,7 @@ set( IFXCoreStatic_SRCS
     RTL/Dependencies/WildCards/wcmatch.cpp
     RTL/Kernel/Common/IFXDebug.cpp
 )
-add_library( IFXCoreStatic STATIC ${IFXCoreStatic_SRCS} ${IFXCoreStatic_HDRS} )
+add_library(IFXCoreStatic STATIC ${IFXCoreStatic_SRCS} ${IFXCoreStatic_HDRS})
 install(
   TARGETS IFXCoreStatic
   ARCHIVE DESTINATION ${LIB_DESTINATION} COMPONENT Development
@@ -705,19 +719,27 @@ install(
 )
 
 # Something Windows-only
-# include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include )
+# include_directories(
+#   RTL/Component/Include
+#   RTL/Kernel/Include
+#   RTL/Platform/Include
+# )
 #
-# set( IFXImportingStatic_SRCS
+# set(IFXImportingStatic_SRCS
 # 	RTL/Component/Base/IFXCoincidentVertexMap.cpp
 # 	RTL/Component/Base/IFXCornerIter.cpp
 # 	RTL/Component/Base/IFXVectorHasher.cpp
 # 	RTL/Component/Base/IFXBoundingBox.cpp
-# 	RTL/Component/Base/IFXVertexMap.cpp )
+# 	RTL/Component/Base/IFXVertexMap.cpp
+# )
 
-# add_library( IFXImportingStatic ${IFXImportingStatic_SRCS} )
+# add_library(IFXImportingStatic ${IFXImportingStatic_SRCS})
 
 # IFXCore
-include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
+include_directories(
+  RTL/Component/Include
+  RTL/Kernel/Include
+  RTL/Platform/Include
   RTL/Component/Base
   RTL/Component/BitStream
   RTL/Component/Bones
@@ -744,7 +766,7 @@ include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Inclu
   RTL/Dependencies/WildCards
 )
 
-set( IFXCore_SRCS
+set(IFXCore_SRCS
     RTL/Platform/${U3D_PLATFORM}/IFXCore/IFXCoreDllMain.cpp
     RTL/IFXCorePluginStatic/IFXCorePluginStatic.cpp
     RTL/Platform/${U3D_PLATFORM}/Common/IFXOSLoader.cpp
@@ -924,7 +946,7 @@ set( IFXCore_SRCS
     RTL/Dependencies/Predicates/predicates.cpp
     RTL/Kernel/Common/IFXDebug.cpp
 )
-set( IFXCore_HDRS
+set(IFXCore_HDRS
     ${Component_HDRS}
     ${Kernel_HDRS}
     ${Platform_HDRS}
@@ -1153,21 +1175,21 @@ set( IFXCore_HDRS
     RTL/Dependencies/WildCards/wcmatch.h
 )
 if(WIN32)
-  set( CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Win32/IFXCore )
-  add_library( IFXCore SHARED ${IFXCore_SRCS} ${IFXCore_HDRS} ${CORE_DIR}/IFXCore.rc ${CORE_DIR}/IFXResource.h ${CORE_DIR}/IFXCore.def ${DEPENDENCIES_SRCS} )
+  set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Win32/IFXCore)
+  add_library(IFXCore SHARED ${IFXCore_SRCS} ${IFXCore_HDRS} ${CORE_DIR}/IFXCore.rc ${CORE_DIR}/IFXResource.h ${CORE_DIR}/IFXCore.def ${DEPENDENCIES_SRCS})
 endif()
 if(APPLE)
-  add_library( IFXCore MODULE ${IFXCore_SRCS} ${IFXCore_HDRS} ${DEPENDENCIES_SRCS} )
+  add_library(IFXCore MODULE ${IFXCore_SRCS} ${IFXCore_HDRS} ${DEPENDENCIES_SRCS})
   set_target_properties( IFXCore PROPERTIES
     LINK_FLAGS "${MY_LINK_FLAGS} -exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Mac32/IFXCore/IFXCore.def" )
 endif()
 if(UNIX AND NOT APPLE)
-  add_library( IFXCore MODULE ${IFXCore_SRCS} ${IFXCore_HDRS} ${DEPENDENCIES_SRCS} )
+  add_library(IFXCore MODULE ${IFXCore_SRCS} ${IFXCore_HDRS} ${DEPENDENCIES_SRCS})
   set_target_properties( IFXCore PROPERTIES
     LINK_FLAGS "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Lin32/IFXCore/IFXCore.list -Wl,--no-undefined" )
-  target_link_libraries( IFXCore ${CMAKE_DL_LIBS} )
+  target_link_libraries(IFXCore ${CMAKE_DL_LIBS})
 endif()
-target_link_libraries( IFXCore ${ADDITIONAL_LIBRARIES} )
+target_link_libraries(IFXCore ${ADDITIONAL_LIBRARIES})
 install(
   TARGETS IFXCore
   RUNTIME DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
@@ -1176,10 +1198,14 @@ install(
 )
 
 
-include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
+include_directories(
+  RTL/Component/Include
+  RTL/Kernel/Include
+  RTL/Platform/Include
   RTL/Component/Exporting
-  RTL/Dependencies/WildCards )
-set( IFXExporting_HDRS
+  RTL/Dependencies/WildCards
+)
+set(IFXExporting_HDRS
     ${Component_HDRS}
     ${Kernel_HDRS}
     ${Platform_HDRS}
@@ -1211,7 +1237,7 @@ set( IFXExporting_HDRS
     RTL/Component/Exporting/CIFXWriteManager.h
     RTL/Dependencies/WildCards/wcmatch.h
 )
-set( IFXExporting_SRCS
+set(IFXExporting_SRCS
     RTL/Platform/${U3D_PLATFORM}/IFXExporting/IFXExportingDllMain.cpp
     RTL/Component/Exporting/CIFXAnimationModifierEncoder.cpp
     RTL/Component/Exporting/CIFXAuthorCLODEncoderX.cpp
@@ -1261,17 +1287,17 @@ set( IFXExporting_SRCS
     RTL/Kernel/Common/IFXDebug.cpp
 )
 if(WIN32)
-  set( EXPORT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Win32/IFXExporting )
-  add_library( IFXExporting  SHARED ${IFXExporting_SRCS} ${IFXExporting_HDRS} ${EXPORT_DIR}/IFXExporting.rc ${EXPORT_DIR}/IFXResource.h ${EXPORT_DIR}/IFXExporting.def )
-  target_link_libraries( IFXExporting IFXCore )
+  set(EXPORT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Win32/IFXExporting)
+  add_library(IFXExporting SHARED ${IFXExporting_SRCS} ${IFXExporting_HDRS} ${EXPORT_DIR}/IFXExporting.rc ${EXPORT_DIR}/IFXResource.h ${EXPORT_DIR}/IFXExporting.def)
+  target_link_libraries(IFXExporting IFXCore)
 endif()
 if(APPLE)
-  add_library( IFXExporting  MODULE ${IFXExporting_SRCS} ${IFXExporting_HDRS} )
+  add_library(IFXExporting MODULE ${IFXExporting_SRCS} ${IFXExporting_HDRS})
   set_target_properties( IFXExporting  PROPERTIES
     LINK_FLAGS "${MY_LINK_FLAGS} -exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Mac32/IFXExporting/IFXExporting.def   -undefined dynamic_lookup" )
 endif()
 if(UNIX AND NOT APPLE)
-  add_library( IFXExporting  MODULE ${IFXExporting_SRCS} ${IFXExporting_HDRS} )
+  add_library(IFXExporting MODULE ${IFXExporting_SRCS} ${IFXExporting_HDRS})
   set_target_properties( IFXExporting  PROPERTIES
     LINK_FLAGS "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Lin32/IFXExporting/IFXExporting.list" )
 endif()
@@ -1282,10 +1308,14 @@ install(
   LIBRARY DESTINATION ${PLUGIN_DESTINATION} COMPONENT Runtime
 )
 
-include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
+include_directories(
+  RTL/Component/Include
+  RTL/Kernel/Include
+  RTL/Platform/Include
   RTL/Component/Importing
-  RTL/Dependencies/WildCards )
-set( IFXImporting_HDRS
+  RTL/Dependencies/WildCards
+)
+set(IFXImporting_HDRS
     ${Component_HDRS}
     ${Kernel_HDRS}
     ${Platform_HDRS}
@@ -1321,7 +1351,7 @@ set( IFXImporting_HDRS
     RTL/Component/Importing/IFXSocketStream.h
     RTL/Dependencies/WildCards/wcmatch.h
 )
-set( IFXImporting_SRCS
+set(IFXImporting_SRCS
     RTL/Platform/${U3D_PLATFORM}/IFXImporting/IFXImportingDllMain.cpp
     RTL/Component/Importing/CIFXAnimationModifierDecoder.cpp
     RTL/Component/Importing/CIFXAuthorCLODDecoder.cpp
@@ -1376,17 +1406,17 @@ set( IFXImporting_SRCS
     RTL/Kernel/Common/IFXDebug.cpp
 )
 if(WIN32)
-  set( IMPORT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Win32/IFXImporting )
-  add_library( IFXImporting  SHARED ${IFXImporting_SRCS} ${IFXImporting_HDRS} ${IMPORT_DIR}/IFXImporting.rc ${IMPORT_DIR}/IFXResource.h ${IMPORT_DIR}/IFXImporting.def )
-  target_link_libraries( IFXImporting IFXCore ws2_32 )
+  set(IMPORT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Win32/IFXImporting)
+  add_library(IFXImporting SHARED ${IFXImporting_SRCS} ${IFXImporting_HDRS} ${IMPORT_DIR}/IFXImporting.rc ${IMPORT_DIR}/IFXResource.h ${IMPORT_DIR}/IFXImporting.def)
+  target_link_libraries(IFXImporting IFXCore ws2_32)
 endif()
 if(APPLE)
-  add_library( IFXImporting  MODULE ${IFXImporting_SRCS} ${IFXImporting_HDRS} )
+  add_library(IFXImporting MODULE ${IFXImporting_SRCS} ${IFXImporting_HDRS})
   set_target_properties( IFXImporting  PROPERTIES
     LINK_FLAGS "${MY_LINK_FLAGS} -exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Mac32/IFXImporting/IFXImporting.def   -undefined dynamic_lookup" )
 endif()
 if(UNIX AND NOT APPLE)
-  add_library( IFXImporting  MODULE ${IFXImporting_SRCS} ${IFXImporting_HDRS} )
+  add_library(IFXImporting MODULE ${IFXImporting_SRCS} ${IFXImporting_HDRS})
   set_target_properties( IFXImporting  PROPERTIES
     LINK_FLAGS "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Lin32/IFXImporting/IFXImporting.list" )
 endif()
@@ -1397,12 +1427,16 @@ install(
   LIBRARY DESTINATION ${PLUGIN_DESTINATION} COMPONENT Runtime
 )
 
-include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
+include_directories(
+  RTL/Component/Include
+  RTL/Kernel/Include
+  RTL/Platform/Include
   RTL/Component/ModifierChain
   RTL/Component/SceneGraph
   RTL/Component/Scheduling
-  RTL/Dependencies/WildCards )
-set( IFXScheduling_HDRS
+  RTL/Dependencies/WildCards
+)
+set(IFXScheduling_HDRS
     ${Component_HDRS}
     ${Kernel_HDRS}
     ${Platform_HDRS}
@@ -1457,7 +1491,7 @@ set( IFXScheduling_HDRS
     RTL/Component/Scheduling/CIFXTimeManager.h
     RTL/Dependencies/WildCards/wcmatch.h
 )
-set( IFXScheduling_SRCS
+set(IFXScheduling_SRCS
     RTL/Platform/${U3D_PLATFORM}/IFXScheduling/IFXSchedulingDllMain.cpp
     RTL/Component/Scheduling/CIFXClock.cpp
     RTL/Component/Scheduling/CIFXErrorInfo.cpp
@@ -1495,17 +1529,17 @@ set( IFXScheduling_SRCS
     RTL/Kernel/Common/IFXDebug.cpp
 )
 if(WIN32)
-  set( SCHED_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Win32/IFXScheduling )
-  add_library( IFXScheduling  SHARED ${IFXScheduling_SRCS} ${IFXScheduling_HDRS} ${SCHED_DIR}/IFXScheduling.rc ${SCHED_DIR}/IFXResource.h ${SCHED_DIR}/IFXScheduling.def )
-  target_link_libraries( IFXScheduling IFXCore )
+  set(SCHED_DIR ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Win32/IFXScheduling)
+  add_library(IFXScheduling SHARED ${IFXScheduling_SRCS} ${IFXScheduling_HDRS} ${SCHED_DIR}/IFXScheduling.rc ${SCHED_DIR}/IFXResource.h ${SCHED_DIR}/IFXScheduling.def)
+  target_link_libraries(IFXScheduling IFXCore)
 endif()
 if(APPLE)
-  add_library( IFXScheduling  MODULE ${IFXScheduling_SRCS} ${IFXScheduling_HDRS} )
+  add_library(IFXScheduling MODULE ${IFXScheduling_SRCS} ${IFXScheduling_HDRS})
   set_target_properties( IFXScheduling  PROPERTIES
     LINK_FLAGS "${MY_LINK_FLAGS} -exported_symbols_list ${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Mac32/IFXScheduling/IFXScheduling.def   -undefined dynamic_lookup" )
 endif()
 if(UNIX AND NOT APPLE)
-  add_library( IFXScheduling  MODULE ${IFXScheduling_SRCS} ${IFXScheduling_HDRS} )
+  add_library(IFXScheduling MODULE ${IFXScheduling_SRCS} ${IFXScheduling_HDRS})
   set_target_properties( IFXScheduling  PROPERTIES
     LINK_FLAGS "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/RTL/Platform/Lin32/IFXScheduling/IFXScheduling.list" )
 endif()
@@ -1516,11 +1550,15 @@ install(
   LIBRARY DESTINATION ${PLUGIN_DESTINATION} COMPONENT Runtime
 )
 
-include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
+include_directories(
+  RTL/Component/Include
+  RTL/Kernel/Include
+  RTL/Platform/Include
   IDTF
   IDTF/Include
-  IDTF/Common )
-set( IDTFConverter_SRCS
+  IDTF/Common
+)
+set(IDTFConverter_SRCS
     IDTF/FileParser.cpp
     IDTF/SceneConverter.cpp
     IDTF/PointSetResourceParser.cpp
@@ -1569,7 +1607,7 @@ set( IDTFConverter_SRCS
     IDTF/Common/ParentList.cpp
     IDTF/Common/GlyphCommandList.cpp
 )
-set( IDTFConverter_HDRS
+set(IDTFConverter_HDRS
     ${Component_HDRS}
     ${Kernel_HDRS}
     ${Platform_HDRS}
@@ -1667,32 +1705,36 @@ set( IDTFConverter_HDRS
 
 if(U3D_BUILD_IDTFConverter)
   if(WIN32)
-    add_executable( IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS} IDTF/IDTFConverter.rc IDTF/IFXResource.h )
+    add_executable(IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS} IDTF/IDTFConverter.rc IDTF/IFXResource.h)
   endif()
   if(APPLE)
-    add_executable( IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS} )
+    add_executable(IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS})
     set_target_properties( IDTFConverter  PROPERTIES
       LINK_FLAGS "${MY_LINK_FLAGS} -exported_symbols_list /dev/null" )
   endif()
   if(UNIX AND NOT APPLE)
-    add_executable( IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS} )
+    add_executable(IDTFConverter ${IDTFConverter_SRCS} ${IDTFConverter_HDRS})
   endif()
-  target_link_libraries( IDTFConverter  IFXCoreStatic ${CMAKE_DL_LIBS} )
-  add_dependencies( IDTFConverter  IFXCoreStatic )
+  target_link_libraries(IDTFConverter IFXCoreStatic ${CMAKE_DL_LIBS})
+  add_dependencies(IDTFConverter IFXCoreStatic)
   install(
     TARGETS IDTFConverter
     DESTINATION ${BIN_DESTINATION} COMPONENT Runtime
   )
 endif()
 
-include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include
+include_directories(
+  RTL/Component/Include
+  RTL/Kernel/Include
+  RTL/Platform/Include
   RTL/Dependencies/WildCards
   RTL/Component/Base
   IDTF
   IDTF/Include
   IDTF/Common
-  libIDTF )
-set( libIDTF_SRCS
+  libIDTF
+)
+set(libIDTF_SRCS
     libIDTF/SceneConverterLib.cpp
     libIDTF/Writer.cpp
     libIDTF/IFXOSLoader.cpp
@@ -1748,7 +1790,7 @@ set( libIDTF_SRCS
     RTL/Kernel/Common/IFXDebug.cpp
     RTL/IFXCoreStatic/IFXCoreStatic.cpp
 )
-set( libIDTF_HDRS
+set(libIDTF_HDRS
     ${Component_HDRS}
     ${Kernel_HDRS}
     ${Platform_HDRS}
@@ -1829,19 +1871,21 @@ set( libIDTF_HDRS
     RTL/Dependencies/WildCards/wcmatch.h
     RTL/Component/Base/IFXVectorHasher.h
 )
-if( U3D_SHARED )
-  set_property( SOURCE
+if(U3D_SHARED)
+  set_property(SOURCE
     libIDTF/IFXOSLoader.cpp
-    PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="." U3DCorePath="${CMAKE_INSTALL_PREFIX}/${LIB_DESTINATION}" )
+    PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="." U3DCorePath="${CMAKE_INSTALL_PREFIX}/${LIB_DESTINATION}"
+  )
 else()
-  set_property( SOURCE
+  set_property(SOURCE
     libIDTF/IFXOSLoader.cpp
-    PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="Plugins" U3DCorePath="." )
+    PROPERTY COMPILE_DEFINITIONS U3DPluginsPath="Plugins" U3DCorePath="."
+  )
 endif()
 if(MSVC)
-  add_library( IDTF STATIC ${libIDTF_SRCS} ${libIDTF_HDRS} )
+  add_library(IDTF STATIC ${libIDTF_SRCS} ${libIDTF_HDRS})
 else()
-  add_library( IDTF SHARED ${libIDTF_SRCS} ${libIDTF_HDRS} )
+  add_library(IDTF SHARED ${libIDTF_SRCS} ${libIDTF_HDRS})
 endif()
 set_property(
   TARGET IDTF
@@ -1853,9 +1897,9 @@ install(
 )
 
 if(U3D_BUILD_SAMPLES)
-  add_executable( IDTFGen Samples/SampleCode/IDTFGen.cpp ${libIDTF_HDRS} )
-  target_link_libraries( IDTFGen  IDTF ${CMAKE_DL_LIBS} )
-  add_dependencies( IDTFGen  IDTF )
+  add_executable(IDTFGen Samples/SampleCode/IDTFGen.cpp ${libIDTF_HDRS})
+  target_link_libraries(IDTFGen IDTF ${CMAKE_DL_LIBS})
+  add_dependencies(IDTFGen IDTF)
 
   install(
     TARGETS IDTFGen
@@ -1864,13 +1908,18 @@ if(U3D_BUILD_SAMPLES)
 endif()
 
 
-#include_directories( RTL/Component/Include RTL/Kernel/Include RTL/Platform/Include )
+# include_directories(
+#   RTL/Component/Include
+#   RTL/Kernel/Include
+#   RTL/Platform/Include
+# )
 if(U3D_BUILD_SAMPLES)
-  add_executable( HelloU3DWorld
+  add_executable(HelloU3DWorld
     Samples/SampleCode/HelloWorld.cpp
-    ${Component_HDRS} ${Kernel_HDRS} ${Platform_HDRS} )
-  target_link_libraries( HelloU3DWorld  IFXCoreStatic ${CMAKE_DL_LIBS} )
-  add_dependencies( HelloU3DWorld  IFXCoreStatic )
+    ${Component_HDRS} ${Kernel_HDRS} ${Platform_HDRS}
+  )
+  target_link_libraries(HelloU3DWorld IFXCoreStatic ${CMAKE_DL_LIBS})
+  add_dependencies(HelloU3DWorld IFXCoreStatic)
 
   install(
     TARGETS HelloU3DWorld
@@ -1878,38 +1927,43 @@ if(U3D_BUILD_SAMPLES)
   )
 endif()
 
-install( DIRECTORY RTL/Component/Include/ RTL/Kernel/Include/ RTL/Platform/Include/
+install(
+  DIRECTORY RTL/Component/Include/ RTL/Kernel/Include/ RTL/Platform/Include/
   DESTINATION ${INCLUDE_DESTINATION}
   COMPONENT Development
   FILES_MATCHING PATTERN "*.h"
 )
-install( FILES RTL/Platform/${U3D_PLATFORM}/IFXRendering/OpenGL/IFXOpenGLOS.h
+install(
+  FILES RTL/Platform/${U3D_PLATFORM}/IFXRendering/OpenGL/IFXOpenGLOS.h
   DESTINATION ${INCLUDE_DESTINATION}
   COMPONENT Development
 )
-install( FILES ${libIDTF_HDRS}
+install(
+  FILES ${libIDTF_HDRS}
   DESTINATION ${INCLUDE_DESTINATION}
   COMPONENT Development
 )
 if(U3D_BUILD_SAMPLES)
-  install( FILES
-    Samples/SampleCode/HelloWorld.cpp
-    Samples/SampleCode/IDTFGen.cpp
-    Samples/SampleCode/Makefile.sample
-    Samples/SampleCode/CMakeLists.txt
-    Samples/SampleCode/vtkU3DExporter.cxx
-    Samples/SampleCode/vtkU3DExporter.h
-    Samples/SampleCode/vtkU3DExporterTest.cxx
+  install(
+    FILES Samples/SampleCode/HelloWorld.cpp
+          Samples/SampleCode/IDTFGen.cpp
+          Samples/SampleCode/Makefile.sample
+          Samples/SampleCode/CMakeLists.txt
+          Samples/SampleCode/vtkU3DExporter.cxx
+          Samples/SampleCode/vtkU3DExporter.h
+          Samples/SampleCode/vtkU3DExporterTest.cxx
     DESTINATION ${SAMPLE_DESTINATION}/SampleCode
     COMPONENT Development
   )
-  install( DIRECTORY Samples/TestScenes
+  install(
+    DIRECTORY Samples/TestScenes
     DESTINATION ${SAMPLE_DESTINATION}
     COMPONENT Development
     PATTERN "Makef*" EXCLUDE
   )
 endif()
-install( DIRECTORY Docs/
+install(
+  DIRECTORY Docs/
   DESTINATION ${DOC_DESTINATION}
   PATTERN "Makef*" EXCLUDE
 )
