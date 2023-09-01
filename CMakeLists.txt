@@ -12,10 +12,6 @@ option(U3D_BUILD_SAMPLES "Build HelloU3DWorld and IDTFGen" ON)
 # there were real problems with cpuid on Ubuntu 13.04 i386
 add_definitions(-DU3D_NO_ASM)
 
-if(CMAKE_GENERATOR STREQUAL "Unix Makefiles")
-  set(CMAKE_VERBOSE_MAKEFILE ON)
-endif()
-
 # add debug definitions
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
   add_definitions(-D_DEBUG -DDEBUG)
