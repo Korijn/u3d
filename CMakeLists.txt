@@ -46,8 +46,6 @@ if(UNIX AND NOT APPLE)
   set(U3D_PLATFORM Lin32)
 endif()
 
-message(STATUS "U3D_SHARED: " ${U3D_SHARED})
-
 if(U3D_SHARED)
   if(NOT LIB_DESTINATION)
     set(LIB_DESTINATION lib)
@@ -125,6 +123,9 @@ else()
   #============================================================================
   # zlib
   #============================================================================
+
+  message(STATUS "")
+  message(STATUS "Configuring packaged zlib library")
 
   include(CheckTypeSize)
   include(CheckFunctionExists)
@@ -207,6 +208,9 @@ else()
   # png
   #============================================================================
 
+  message(STATUS "")
+  message(STATUS "Configuring packaged png library")
+
   if(NOT WIN32)
     find_library(M_LIBRARY
       NAMES m
@@ -264,6 +268,9 @@ else()
   #============================================================================
   # jpeg
   #============================================================================
+
+  message(STATUS "")
+  message(STATUS "Configuring packaged jpeg library")
 
   check_include_file(stdlib.h HAVE_STDLIB_H)
 
@@ -366,8 +373,18 @@ else()
 
 endif()
 
-message(STATUS "CMAKE_INSTALL_PREFIX:         " ${CMAKE_INSTALL_PREFIX})
-message(STATUS "LIB_DESTINATION:         " ${LIB_DESTINATION})
+message(STATUS "")
+message(STATUS "U3D_SHARED:              ${U3D_SHARED}")
+message(STATUS "U3D_BUILD_IDTFConverter: ${U3D_BUILD_IDTFConverter}")
+message(STATUS "U3D_BUILD_SAMPLES:       ${U3D_BUILD_SAMPLES}")
+message(STATUS "CMAKE_INSTALL_PREFIX:    ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "LIB_DESTINATION:         ${LIB_DESTINATION}")
+message(STATUS "BIN_DESTINATION:         ${BIN_DESTINATION}")
+message(STATUS "INCLUDE_DESTINATION:     ${INCLUDE_DESTINATION}")
+message(STATUS "PLUGIN_DESTINATION:      ${PLUGIN_DESTINATION}")
+message(STATUS "SAMPLE_DESTINATION:      ${SAMPLE_DESTINATION}")
+message(STATUS "DOC_DESTINATION:         ${DOC_DESTINATION}")
+message(STATUS "")
 
 # include_directories(
 #   RTL/Component/Include
