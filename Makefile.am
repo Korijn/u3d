@@ -1,2 +1,0 @@
-SUBDIRS = RTL IDTF libIDTF Docs Samples
-ACLOCAL_AMFLAGS = -I m4
